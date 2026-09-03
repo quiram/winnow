@@ -17,12 +17,4 @@ skills/
 
 ## Releasing
 
-```bash
-apm marketplace check   # validate the marketplace entries resolve
-apm pack                # regenerate .claude-plugin/marketplace.json
-git add apm.yml .claude-plugin/marketplace.json
-git commit -m "Release vX.Y.Z"
-git tag vX.Y.Z && git push --tags
-```
-
-Keep `version` in `apm.yml` and `plugin.json` in step, and commit the regenerated marketplace file — consumers resolve from it, not from `apm.yml`.
+Releasing is handled by the repo-local `release` skill: with a coding agent, ask it to "release version X.Y.Z". The skill lives at [.claude/skills/release/SKILL.md](.claude/skills/release/SKILL.md) — it is not part of the winnow package — and doubles as the manual step-by-step instructions if you're releasing by hand.
