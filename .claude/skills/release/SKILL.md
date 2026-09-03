@@ -26,12 +26,14 @@ Cut a release of this repo. The version follows semver; if the user hasn't said 
 
    ```bash
    apm marketplace check   # entries must resolve OK
-   apm pack                # regenerates .claude-plugin/marketplace.json and .claude-plugin/plugin.json
+   apm pack                # regenerates .claude-plugin/marketplace.json
    ```
 
-   Both regenerated files are committed — consumers resolve from
-   `marketplace.json`, not from `apm.yml`. If `apm pack` warns or fails, stop
-   and surface it; don't release over a warning.
+   `marketplace.json` is the only generated file in the repo and is committed —
+   consumers resolve from it, not from `apm.yml`. If `apm pack` warns, fails,
+   or produces any file other than `marketplace.json` and the `build/` bundle
+   (e.g. a `.claude-plugin/plugin.json` — this repo deliberately has none),
+   stop and surface it; don't release over it.
 
 4. **Commit** the changed files (`apm.yml`, `plugin.json`, `.claude-plugin/`)
    with the message `Release vX.Y.Z`.
