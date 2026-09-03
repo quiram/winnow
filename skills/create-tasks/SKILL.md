@@ -29,7 +29,7 @@ Read the project's AI context to learn **which task tracker this project uses** 
 Rules of discovery:
 
 - If the documentation clearly names one tracker, use it.
-- If **more than one tracker** is plausible (e.g. the docs mention both GitHub Issues and JIRA) and the documentation does not disambiguate, **ask the user which one to use — never assume**. In an unattended run, stop and report the ambiguity instead.
+- If **more than one tracker** is plausible (e.g. the docs mention both GitHub Issues and JIRA) and the documentation does not disambiguate, **ask the user which one to use — never assume**.
 - If no tracker is documented at all, ask the user, and suggest recording the answer in the AI context (via update-context) so the question never comes up again.
 
 ## Step 3 — Verify the tooling

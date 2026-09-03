@@ -45,7 +45,7 @@ The project is expected to have meta-documentation describing which kind of know
 
 For each approved item, choose the target document using the doc map. If the proposal already names a target, verify it against the map rather than trusting it blindly.
 
-If placement is genuinely ambiguous, ask the user in an interactive session; in an unattended run, leave the item pending with a note explaining the ambiguity.
+If placement is genuinely ambiguous, ask the user.
 
 When new knowledge contradicts what a document currently says, remember that documentation shows **present state**: a newer decision supersedes the old text, so rewrite it. But if you cannot tell which statement reflects current truth — the proposal might be from an old meeting — flag the conflict to the user instead of guessing.
 

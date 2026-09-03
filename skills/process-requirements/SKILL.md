@@ -35,19 +35,17 @@ If no AI context exists, say so plainly. You may still triage the input, but fla
 
 ## Step 2 — Gather the input
 
-Two modes of operation:
+This skill works conversationally: a person is present to answer questions, whether the input is a live brainstorm or a transcript brought in for processing.
 
-**Conversational.** A person is brainstorming with you. Act as a facilitator: trade questions back and forth, test ideas against the existing context, and keep going until a coherent set of requirements and knowledge has been surfaced *and agreed*. Don't rush to the proposal — the conversation is the work. Summarise what has been agreed at natural checkpoints so the user can correct you early.
+**Brainstorming.** Act as a facilitator: trade questions back and forth, test ideas against the existing context, and keep going until a coherent set of requirements and knowledge has been surfaced *and agreed*. Don't rush to conclusions — the conversation is the work. Summarise what has been agreed at natural checkpoints so the user can correct you early.
 
-**Transactional / batch.** You are given one or more transcripts to distil. Transcripts may arrive:
+**Transcripts.** One or more meeting transcripts may be supplied:
 
 - **inline** — text pasted into the conversation;
 - **as files** — read them from disk;
 - **as links** — before doing anything else, check you actually have a tool that can access the link (e.g. a Granola MCP server for Granola transcripts, an authenticated fetch for a private doc). If no suitable tool or permission is available, stop and tell the user exactly what is missing — never guess at a transcript's content.
 
-With multiple transcripts, process them all and keep per-source provenance: the proposal must say which source each item came from, because sources can disagree.
-
-If a batch run is invoked by a person in a chat (rather than fully unattended), you may blend the modes: process the transcripts, then ask clarifying questions before finalising the proposal.
+With multiple transcripts, process them all and keep per-source provenance: sources can disagree, and the user will want to know who said what. After reading them, continue conversationally — raise gaps and conflicts with the user before settling your findings.
 
 ## Step 3 — Triage every piece of information
 
@@ -73,9 +71,7 @@ Actively look for trouble; don't just transcribe:
 - candidate tasks with **no discernible goal**, or goals with no path to done;
 - scope that is implied but never confirmed.
 
-In an interactive session, ask the user. Batch related questions together rather than dripping them one at a time, and offer your best-guess interpretation alongside each question so the user can simply confirm.
-
-In an unattended batch run, **never invent answers**. Record every unresolved point in the proposal's *Open questions* section, attached to the items it affects; downstream skills will refuse to act on items with blocking open questions.
+Ask the user about all of it. Group related questions together rather than dripping them one at a time, and offer your best-guess interpretation alongside each question so the user can simply confirm. Never invent answers, and never leave a conflict silently unresolved.
 
 ## Step 5 — Write the proposal
 
@@ -113,7 +109,6 @@ sources:
 - **Target:** <doc path, or "unknown — needs doc map">
 - **Source:** <which input / speaker>
 - **Related:** T-2              # optional cross-references
-- **Blocked by:** Q-1           # optional; open questions that must be answered first
 
 <The knowledge itself, written out in full, plus a one-line rationale for
 why it is durable knowledge.>
@@ -124,15 +119,10 @@ why it is durable knowledge.>
 - **Goal:** <the business goal — the why>
 - **Source:** <which input / speaker>
 - **Depends on:** T-3           # optional; only when true independence is impossible
-- **Blocked by:** Q-2           # optional
 
 <What needs doing and what done looks like, in enough detail for
 create-tasks to write a full ticket.>
 
-## Open questions
-### Q-1: <the question>
-- **Affects:** CU-1, T-2
-- **Best guess:** <your interpretation, clearly marked as a guess>
 ```
 
 Number items sequentially (CU-n, T-n, Q-n) — the identifiers are how the user and the other skills refer to them.

@@ -30,13 +30,13 @@ flowchart LR
 
 ### process-requirements
 
-Takes input either **conversationally** (a person brainstorming with the agent until requirements are surfaced and agreed) or **transactionally** (one or more meeting transcripts — inline, as files, or as links, provided a tool with access exists). It triages everything into three buckets:
+Works conversationally, whether the input is a live brainstorm or one or more meeting transcripts (inline, as files, or as links, provided a tool with access exists) worked through with the user. It triages everything into three buckets:
 
 - **irrelevant** — discarded; the skill lists what it dropped when presenting its findings, and keeps no record beyond that;
 - **durable knowledge** — things anyone working on the project later would need, destined for the AI context;
 - **actionable work** — concrete tasks with a done-state and a why, destined for the tracker.
 
-It actively hunts gaps, conflicts, and ambiguity: interactively it asks; in batch runs it records open questions rather than inventing answers. Its output is a **proposal file** — never a direct edit to docs or tracker.
+It actively hunts gaps, conflicts, and ambiguity, and asks the user rather than inventing answers. Its output is a **proposal file** — never a direct edit to docs or tracker.
 
 ### update-context
 
