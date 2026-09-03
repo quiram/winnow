@@ -1,6 +1,6 @@
 {
   "name": "winnow",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Skills for managing a software product's requirements and roadmap: distil brainstorming conversations and meeting transcripts into durable AI context updates and well-formed task-tracker tickets.",
   "author": {
     "name": "Abraham Marin Perez"

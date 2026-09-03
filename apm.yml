@@ -1,5 +1,5 @@
 name: winnow
-version: 0.1.0
+version: 0.2.0
 description: >-
   Skills for managing a software product's requirements and roadmap: distil
   brainstorming conversations and meeting transcripts into durable AI context
@@ -37,4 +37,4 @@ marketplace:
         approved knowledge into the project's AI context) and create-tasks
         (turn approved work items into tracker tickets).
       source: ./
-      version: 0.1.0
+      version: 0.2.0
