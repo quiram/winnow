@@ -3,8 +3,8 @@ name: process-requirements
 description: >-
   Distil requirements from a brainstorming conversation or from meeting
   transcripts. Separates noise from durable project knowledge and actionable
-  work, surfaces gaps, conflicts and ambiguities, and produces a reviewable
-  proposal that feeds the update-context and create-tasks skills. Use when
+  work, surfaces gaps, conflicts and ambiguities, agrees the findings with the
+  user, and hands them to the update-context and create-tasks skills. Use when
   brainstorming product requirements or roadmap items, when given one or more
   meeting transcripts or notes to process, or when asked to extract
   requirements, decisions or actions from a discussion.
@@ -83,52 +83,16 @@ Write the proposal **outside the repo** — the pipeline must leave no footprint
 
 where `<hash>` is the first 8 hex characters of the SHA-256 of the repo root's absolute path (`printf '%s' "<abs repo root>" | shasum -a 256 | cut -c1-8`). The hash keeps two checkouts with the same folder name apart; the formula is fixed so the other skills in the pipeline can find the fallback directory without being told.
 
-The proposal is **short-lived working state, not a project artefact**: it exists for the duration of a processing run — minutes, maybe hours, from writing through review to application — and downstream skills mark items as they process them and delete the file once every item has reached a terminal state. If the OS cleans `/tmp` before a proposal is applied, nothing durable is lost — re-run this skill from the original input. Always tell the user the full path you wrote to.
+The proposal is **short-lived internal working state, not a project artefact** — plumbing between the skills, not a deliverable. The user doesn't need to know where it is or what it looks like, any more than a program reports which memory address holds a variable; what the user sees is your summary in the chat. It exists for the duration of a processing run — minutes, maybe hours — and is deleted once the pipeline is done with it. If the OS cleans `/tmp` before then, nothing durable is lost — re-run this skill from the original input.
 
-### Proposal format
+There is no prescribed format. Structure the file however you like, as long as a separate skill invocation can unambiguously extract:
 
-The file is self-describing — downstream skills and humans parse it by its headings, so keep the structure exact:
-
-```markdown
----
-proposal: <topic-slug>
-created: <YYYY-MM-DD>
-status: pending-review   # pending-review | approved | in-progress
-sources:
-  - <one line per input: "meeting transcript 2026-09-01 (file: notes/x.md)">
----
-
-# Proposal: <human-readable topic>
-
-## Summary
-<3–6 sentences: what was discussed, what this proposal changes.>
-
-## Context updates
-### CU-1: <short title>
-- **Status:** pending          # pending | approved | applied | rejected
-- **Target:** <doc path, or "unknown — needs doc map">
-- **Source:** <which input / speaker>
-- **Related:** T-2              # optional cross-references
-
-<The knowledge itself, written out in full, plus a one-line rationale for
-why it is durable knowledge.>
-
-## Candidate tasks
-### T-1: <short title>
-- **Status:** pending          # pending | approved | created (<ticket ref>) | rejected
-- **Goal:** <the business goal — the why>
-- **Source:** <which input / speaker>
-- **Depends on:** T-3           # optional; only when true independence is impossible
-
-<What needs doing and what done looks like, in enough detail for
-create-tasks to write a full ticket.>
-
-```
-
-Number items sequentially (CU-n, T-n, Q-n) — the identifiers are how the user and the other skills refer to them.
+- the **context updates** — each piece of knowledge written out in full, with its intended target document if known;
+- the **tasks** — each with its business goal, the work itself, what done looks like, and any dependency on another task in the same proposal;
+- the **sources** each item came from.
 
 ## Step 6 — Hand off
 
-Present the proposal to the user: summary first, then context updates, candidate tasks, and open questions. In conversational mode, iterate until the user marks items approved (update the item statuses as they decide). In batch mode, deliver the summary and the path to the proposal file.
+Present your findings in the chat: a short summary, then the proposed context updates, the candidate tasks, and what you discarded. Iterate in conversation until the user has decided what to do with each piece.
 
 Then point at the next step: run **update-context** for approved context updates and **create-tasks** for approved tasks. Do not perform those steps yourself, even if asked to "just do it all" — invoke the corresponding skill so its safeguards apply.
