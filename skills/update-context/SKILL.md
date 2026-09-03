@@ -20,7 +20,7 @@ The AI context exists so that *people and AI alike know how to work on this proj
 
 Operate from a proposal file written by process-requirements. Proposals live outside the repo: in the coding agent's scratchpad/staging area when the harness provides one, otherwise in `/tmp/winnow/<repo-folder-name>-<hash>/proposals/`, where `<hash>` is the first 8 hex characters of the SHA-256 of the repo root's absolute path (`printf '%s' "<abs repo root>" | shasum -a 256 | cut -c1-8`). If the user points you at one, use it; otherwise use the most recent proposal with unapplied context updates, confirming your pick with the user.
 
-If the user instead hands you facts directly in conversation ("record that we've chosen Kafka"), don't bypass the pipeline: write a minimal proposal file first (same format, items pre-approved by the user's request), then proceed. This keeps one auditable path. Write it to the proposal directory above — never inside the repo.
+If the user instead hands you facts directly in conversation ("record that we've chosen Kafka"), just work from the conversation — the user's request is the approval. Don't create a proposal file only to delete it.
 
 Everything in the proposal has already been agreed with the user — apply all of it. There are no statuses to check: if something wasn't approved, it isn't in the file.
 
