@@ -1,0 +1,15 @@
+{
+  "name": "winnow",
+  "owner": {
+    "name": "Abraham Marin Perez",
+    "url": "https://github.com/quiram"
+  },
+  "plugins": [
+    {
+      "name": "winnow",
+      "description": "Requirements and roadmap management skills: process-requirements (distil input into a reviewable proposal), update-context (fold approved knowledge into the project's AI context) and create-tasks (turn approved work items into tracker tickets).",
+      "version": "0.1.0",
+      "source": "./"
+    }
+  ]
+}
