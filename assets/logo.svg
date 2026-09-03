@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="winnow logo: a winnowing basket separating grain from chaff">
+  <!-- chaff drifting away on the wind -->
+  <g stroke="#A8A18B" stroke-width="4" stroke-linecap="round" fill="none" opacity="0.75">
+    <path d="M170 78 q14 -10 28 -6"/>
+    <path d="M188 100 q16 -12 32 -8"/>
+    <path d="M198 60 q12 -8 24 -5"/>
+  </g>
+  <g fill="#C9C2AE" opacity="0.85">
+    <ellipse cx="212" cy="66" rx="4" ry="2.5" transform="rotate(-25 212 66)"/>
+    <ellipse cx="230" cy="86" rx="4" ry="2.5" transform="rotate(-20 230 86)"/>
+    <ellipse cx="222" cy="48" rx="3.5" ry="2.2" transform="rotate(-30 222 48)"/>
+    <ellipse cx="240" cy="106" rx="3.5" ry="2.2" transform="rotate(-15 240 106)"/>
+  </g>
+
+  <!-- grain tossed up, falling back into the basket -->
+  <g fill="#E8B84B" stroke="#A5761F" stroke-width="2">
+    <ellipse cx="96" cy="104" rx="5" ry="8.5" transform="rotate(-15 96 104)"/>
+    <ellipse cx="118" cy="84" rx="5" ry="8.5" transform="rotate(8 118 84)"/>
+    <ellipse cx="142" cy="80" rx="5" ry="8.5" transform="rotate(22 142 80)"/>
+    <ellipse cx="163" cy="96" rx="5" ry="8.5" transform="rotate(35 163 96)"/>
+    <ellipse cx="110" cy="122" rx="5" ry="8.5" transform="rotate(-5 110 122)"/>
+    <ellipse cx="150" cy="116" rx="5" ry="8.5" transform="rotate(15 150 116)"/>
+    <ellipse cx="130" cy="132" rx="5" ry="8.5" transform="rotate(4 130 132)"/>
+  </g>
+
+  <!-- basket bowl -->
+  <path d="M48 150 a80 80 0 0 0 160 0 Z" fill="#D9A05B" stroke="#8C5A2B" stroke-width="6" stroke-linejoin="round"/>
+
+  <!-- weave: concentric arcs -->
+  <g stroke="#B97E3F" stroke-width="3" fill="none">
+    <path d="M68 150 a60 60 0 0 0 120 0"/>
+    <path d="M88 150 a40 40 0 0 0 80 0"/>
+    <path d="M108 150 a20 20 0 0 0 40 0"/>
+  </g>
+
+  <!-- weave: radial ribs -->
+  <g stroke="#B97E3F" stroke-width="3" stroke-linecap="round">
+    <line x1="128" y1="150" x2="61" y2="189"/>
+    <line x1="128" y1="150" x2="89" y2="217"/>
+    <line x1="128" y1="150" x2="128" y2="228"/>
+    <line x1="128" y1="150" x2="167" y2="217"/>
+    <line x1="128" y1="150" x2="195" y2="189"/>
+  </g>
+
+  <!-- rim -->
+  <rect x="42" y="144" width="172" height="12" rx="6" fill="#8C5A2B"/>
+</svg>
