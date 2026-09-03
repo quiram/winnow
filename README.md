@@ -32,7 +32,7 @@ flowchart LR
 
 Takes input either **conversationally** (a person brainstorming with the agent until requirements are surfaced and agreed) or **transactionally** (one or more meeting transcripts — inline, as files, or as links, provided a tool with access exists). It triages everything into three buckets:
 
-- **irrelevant** — discarded, but logged for auditability;
+- **irrelevant** — discarded; the skill lists what it dropped when presenting its findings, and keeps no record beyond that;
 - **durable knowledge** — things anyone working on the project later would need, destined for the AI context;
 - **actionable work** — concrete tasks with a done-state and a why, destined for the tracker.
 

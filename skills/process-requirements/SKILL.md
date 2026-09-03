@@ -53,7 +53,7 @@ If a batch run is invoked by a person in a chat (rather than fully unattended), 
 
 Sort everything in the input into exactly one of three buckets (or the fourth, hybrid case):
 
-**Irrelevant.** Small talk, scheduling logistics, tangents, transient status updates ("the build was red this morning"), and restatements of what the context already documents. Discard it — but keep a one-line-per-item log in the proposal's *Discarded* section so the user can audit that nothing important was dropped.
+**Irrelevant.** Small talk, scheduling logistics, tangents, transient status updates ("the build was red this morning"), and restatements of what the context already documents. Discard it — but list what you dropped, one line per item, when you present your findings, so the user can catch anything that shouldn't have been discarded. No record of discarded content is kept beyond that mention in the conversation.
 
 **Durable knowledge → context update.** Decisions, constraints, domain facts, architectural choices, conventions, goals, non-goals. The test: *would someone (person or AI) working on this project in three months need this to do the work correctly?* If yes, it belongs in the AI context, not in a ticket comment where it will be lost.
 
@@ -133,9 +133,6 @@ create-tasks to write a full ticket.>
 ### Q-1: <the question>
 - **Affects:** CU-1, T-2
 - **Best guess:** <your interpretation, clearly marked as a guess>
-
-## Discarded
-- <one line per discarded item, with a two-or-three-word reason>
 ```
 
 Number items sequentially (CU-n, T-n, Q-n) — the identifiers are how the user and the other skills refer to them.
