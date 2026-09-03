@@ -73,9 +73,13 @@ Actively look for trouble; don't just transcribe:
 
 Ask the user about all of it. Group related questions together rather than dripping them one at a time, and offer your best-guess interpretation alongside each question so the user can simply confirm. Never invent answers, and never leave a conflict silently unresolved.
 
-## Step 5 — Write the proposal
+## Step 5 — Agree the findings
 
-Write the proposal **outside the repo** — the pipeline must leave no footprint in the host project, so never create working files or gitignore entries inside it. Prefer the coding agent's own staging area: if your harness provides a scratchpad or temporary-files directory for the session, put the proposal there. Only when no such area exists, fall back to:
+Present your findings in the chat: a short summary, then the proposed context updates, the candidate tasks, and what you discarded. Iterate in conversation until the user has decided what to do with each piece. Only what the user approves goes any further — anything not approved simply does not exist from here on.
+
+## Step 6 — Write the proposal and hand off
+
+Write the proposal — containing only the approved items — **outside the repo** — the pipeline must leave no footprint in the host project, so never create working files or gitignore entries inside it. Prefer the coding agent's own staging area: if your harness provides a scratchpad or temporary-files directory for the session, put the proposal there. Only when no such area exists, fall back to:
 
 ```
 /tmp/winnow/<repo-folder-name>-<hash>/proposals/YYYY-MM-DD-<topic-slug>.md
@@ -90,9 +94,5 @@ There is no prescribed format. Structure the file however you like, as long as a
 - the **context updates** — each piece of knowledge written out in full, with its intended target document if known;
 - the **tasks** — each with its business goal, the work itself, what done looks like, and any dependency on another task in the same proposal;
 - the **sources** each item came from.
-
-## Step 6 — Hand off
-
-Present your findings in the chat: a short summary, then the proposed context updates, the candidate tasks, and what you discarded. Iterate in conversation until the user has decided what to do with each piece.
 
 Then run **update-context** for the approved context updates and **create-tasks** for the approved tasks — always by invoking those skills, never by replicating their work here. If the user has told you to "just do it all", that is your authorisation to invoke them directly, without pausing for further confirmation; otherwise, hand over when the user says to proceed.

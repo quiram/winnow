@@ -20,7 +20,7 @@ Operate from a proposal file written by process-requirements. Proposals live out
 
 If the user instead describes tasks directly in conversation, write a minimal proposal file first (same format, items pre-approved by the user's request), then proceed — one auditable path. Write it to the proposal directory above — never inside the repo.
 
-Only act on items whose status is **approved**. Skip items that are **pending**, **rejected**, or **blocked by** an unanswered open question — list what you skipped and why.
+Everything in the proposal has already been agreed with the user — act on all of it. There are no statuses to check: if something wasn't approved, it isn't in the file.
 
 ## Step 2 — Discover the tracker
 
@@ -74,6 +74,5 @@ Create tickets in dependency order (prerequisites first) so relations can be lin
 
 ## Step 5 — Wrap up
 
-- In the proposal, set each processed item's status to **created (<ticket ref>)** — record the real ticket identifier or URL — or **rejected** if the user dropped it during the run.
-- If every item in the proposal — tasks *and* context updates — has reached a terminal state, delete the proposal file: it is intermediate working state, not a record. If context updates are still pending, leave the file in place for update-context.
+- Remove the tasks you have created from the proposal (along with any item the user withdrew during the run). If nothing remains in the file, delete it: it is intermediate working state, not a record. If its context updates are still to be applied, leave it for update-context.
 - Report the created tickets with their links, any skips with reasons, and any dependency relations you set.

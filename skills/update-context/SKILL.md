@@ -22,7 +22,7 @@ Operate from a proposal file written by process-requirements. Proposals live out
 
 If the user instead hands you facts directly in conversation ("record that we've chosen Kafka"), don't bypass the pipeline: write a minimal proposal file first (same format, items pre-approved by the user's request), then proceed. This keeps one auditable path. Write it to the proposal directory above — never inside the repo.
 
-Only act on items whose status is **approved**. Skip items that are **pending**, **rejected**, or **blocked by** an unanswered open question — list what you skipped and why.
+Everything in the proposal has already been agreed with the user — apply all of it. There are no statuses to check: if something wasn't approved, it isn't in the file.
 
 ## Step 2 — Check for the project's own documentation machinery
 
@@ -62,6 +62,5 @@ After editing a document, **re-read it in full**. Check that it flows, that head
 
 ## Step 6 — Wrap up
 
-- In the proposal, set each processed item's status to **applied** (or **rejected**, if the user changed their mind during the run).
-- If every item in the proposal — context updates *and* tasks — has reached a terminal state, delete the proposal file: it is intermediate working state, not a record. If tasks are still pending, leave the file in place for create-tasks.
+- Remove the context updates you have applied from the proposal (along with any item the user withdrew during the run). If nothing remains in the file, delete it: it is intermediate working state, not a record. If its tasks are still to be created, leave it for create-tasks.
 - Report back per document: what changed, and which proposal items drove it. Quote or summarise the edits so the user can review without opening every file.
