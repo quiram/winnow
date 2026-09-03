@@ -21,7 +21,7 @@ Three skills, deliberately separated so a human checkpoint sits between analysis
 ```mermaid
 flowchart LR
     A[Conversation /<br/>transcripts] --> P[process-requirements]
-    P --> F[Proposal file<br/><i>short-lived, in /tmp</i>]
+    P --> F[Proposal file<br/><i>short-lived, outside the repo</i>]
     F -->|approved knowledge| C[update-context]
     F -->|approved tasks| T[create-tasks]
     C --> D[AI context docs]
@@ -48,7 +48,7 @@ Turns a proposal's approved tasks into tickets. It discovers the tracker and its
 
 ## The proposal file
 
-The handoff between skills is a structured markdown file kept **outside the consuming repo**, so the pipeline leaves no footprint in the host project — no working folders, no gitignore entries. Proposals live in `/tmp/winnow/<repo-folder-name>-<hash>/proposals/`, where the hash is derived from the repo's absolute path so every skill in the pipeline finds the same directory. They are **short-lived**: a proposal exists for the duration of a processing run — minutes, maybe hours — and the skills delete it once every item reaches a terminal state (applied, created, or rejected). The durable records are the AI context and the tracker, not the proposal.
+The handoff between skills is a structured markdown file kept **outside the consuming repo**, so the pipeline leaves no footprint in the host project — no working folders, no gitignore entries. Proposals live in the coding agent's own scratchpad/staging area when the harness provides one, falling back to `/tmp/winnow/<repo-folder-name>-<hash>/proposals/` otherwise (the hash is derived from the repo's absolute path so every skill in the pipeline finds the same directory). They are **short-lived**: a proposal exists for the duration of a processing run — minutes, maybe hours — and the skills delete it once every item reaches a terminal state (applied, created, or rejected). The durable records are the AI context and the tracker, not the proposal.
 
 ## What a consuming repo must provide
 

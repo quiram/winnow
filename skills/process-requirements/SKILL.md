@@ -75,13 +75,13 @@ Ask the user about all of it. Group related questions together rather than dripp
 
 ## Step 5 — Write the proposal
 
-Write the proposal **outside the repo** — the pipeline must leave no footprint in the host project, so never create working files or gitignore entries inside it. The proposal directory for a repo is:
+Write the proposal **outside the repo** — the pipeline must leave no footprint in the host project, so never create working files or gitignore entries inside it. Prefer the coding agent's own staging area: if your harness provides a scratchpad or temporary-files directory for the session, put the proposal there. Only when no such area exists, fall back to:
 
 ```
 /tmp/winnow/<repo-folder-name>-<hash>/proposals/YYYY-MM-DD-<topic-slug>.md
 ```
 
-where `<hash>` is the first 8 hex characters of the SHA-256 of the repo root's absolute path (`printf '%s' "<abs repo root>" | shasum -a 256 | cut -c1-8`). The hash keeps two checkouts with the same folder name apart; the formula is fixed so the other skills in the pipeline can find the directory independently.
+where `<hash>` is the first 8 hex characters of the SHA-256 of the repo root's absolute path (`printf '%s' "<abs repo root>" | shasum -a 256 | cut -c1-8`). The hash keeps two checkouts with the same folder name apart; the formula is fixed so the other skills in the pipeline can find the fallback directory without being told.
 
 The proposal is **short-lived working state, not a project artefact**: it exists for the duration of a processing run — minutes, maybe hours, from writing through review to application — and downstream skills mark items as they process them and delete the file once every item has reached a terminal state. If the OS cleans `/tmp` before a proposal is applied, nothing durable is lost — re-run this skill from the original input. Always tell the user the full path you wrote to.
 

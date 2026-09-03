@@ -16,7 +16,7 @@ You are the third stage of a three-skill pipeline: **process-requirements** anal
 
 ## Step 1 — Load the work
 
-Operate from a proposal file (format defined by process-requirements: items numbered T-n with per-item **Status** fields). Proposals live outside the repo, in `/tmp/winnow/<repo-folder-name>-<hash>/proposals/`, where `<hash>` is the first 8 hex characters of the SHA-256 of the repo root's absolute path (`printf '%s' "<abs repo root>" | shasum -a 256 | cut -c1-8`). If the user points you at one, use it; otherwise use the most recent proposal with uncreated tasks, confirming your pick with the user.
+Operate from a proposal file (format defined by process-requirements: items numbered T-n with per-item **Status** fields). Proposals live outside the repo: in the coding agent's scratchpad/staging area when the harness provides one, otherwise in `/tmp/winnow/<repo-folder-name>-<hash>/proposals/`, where `<hash>` is the first 8 hex characters of the SHA-256 of the repo root's absolute path (`printf '%s' "<abs repo root>" | shasum -a 256 | cut -c1-8`). If the user points you at one, use it; otherwise use the most recent proposal with uncreated tasks, confirming your pick with the user.
 
 If the user instead describes tasks directly in conversation, write a minimal proposal file first (same format, items pre-approved by the user's request), then proceed — one auditable path. Write it to the proposal directory above — never inside the repo.
 
