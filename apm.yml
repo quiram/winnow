@@ -1,0 +1,45 @@
+name: winnow
+version: 0.1.0
+description: >-
+  Skills for managing a software product's requirements and roadmap: distil
+  brainstorming conversations and meeting transcripts into durable AI context
+  updates and well-formed task-tracker tickets.
+author: Abraham Marin Perez
+license: MIT
+# Which agent platforms to deploy to when installing locally.
+# Resolution order: --target flag > this field > auto-detect from filesystem.
+# Accepted values: agent-skills, antigravity, claude, codex, copilot, cursor, gemini, grok-build, kiro, opencode, vscode, windsurf
+targets:
+  - claude
+dependencies:
+  apm: []
+  mcp: []
+includes: auto
+devDependencies:
+  apm: []
+scripts: {}
+marketplace:
+  owner:
+    name: Abraham Marin Perez
+    url: https://github.com/quiram
+
+  # Default tag pattern used to resolve version ranges for each package.
+  build:
+    tagPattern: "v{version}"
+
+  # Output targets. 'claude' generates .claude-plugin/marketplace.json,
+  # consumed by both APM and Claude Code's native /plugin marketplace flow.
+  outputs:
+    claude: {}
+
+  # This repo is both the package and the marketplace that serves it:
+  # the single entry below points at the repo root itself.
+  packages:
+    - name: winnow
+      description: >-
+        Requirements and roadmap management skills: process-requirements
+        (distil input into a reviewable proposal), update-context (fold
+        approved knowledge into the project's AI context) and create-tasks
+        (turn approved work items into tracker tickets).
+      source: ./
+      version: 0.1.0
