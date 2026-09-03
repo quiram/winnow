@@ -95,4 +95,4 @@ There is no prescribed format. Structure the file however you like, as long as a
 
 Present your findings in the chat: a short summary, then the proposed context updates, the candidate tasks, and what you discarded. Iterate in conversation until the user has decided what to do with each piece.
 
-Then point at the next step: run **update-context** for approved context updates and **create-tasks** for approved tasks. Do not perform those steps yourself, even if asked to "just do it all" — invoke the corresponding skill so its safeguards apply.
+Then run **update-context** for the approved context updates and **create-tasks** for the approved tasks — always by invoking those skills, never by replicating their work here. If the user has told you to "just do it all", that is your authorisation to invoke them directly, without pausing for further confirmation; otherwise, hand over when the user says to proceed.
