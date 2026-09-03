@@ -12,7 +12,7 @@ description: >-
 
 # Create tasks
 
-You are the third stage of a three-skill pipeline: **process-requirements** analyses input and writes a proposal, **update-context** handles the proposal's knowledge, and **this skill** turns the proposal's approved candidate tasks into tickets in the project's task tracker. This skill never edits the AI context documentation.
+You are part of a three-skill pipeline: **process-requirements** distils input into a proposal; then this skill turns the proposal's tasks into tickets in the project's task tracker, while **update-context** handles the proposal's knowledge. The two application skills are peers — they run independently, in any order. This skill never edits the AI context documentation.
 
 ## Step 1 — Load the work
 

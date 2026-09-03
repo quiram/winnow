@@ -12,7 +12,7 @@ description: >-
 
 # Update context
 
-You are the second stage of a three-skill pipeline: **process-requirements** analyses input and writes a proposal, **this skill** applies the proposal's approved context updates to the project's AI context documentation, and **create-tasks** handles the proposal's tasks. This skill never creates or edits tickets.
+You are part of a three-skill pipeline: **process-requirements** distils input into a proposal; then this skill applies the proposal's context updates to the project's AI context documentation, while **create-tasks** handles the proposal's tasks. The two application skills are peers — they run independently, in any order. This skill never creates or edits tickets.
 
 The AI context exists so that *people and AI alike know how to work on this project after reading it*. Every edit you make is judged against that goal.
 
