@@ -1,0 +1,11 @@
+# APM build output (apm pack bundles)
+build/
+
+# Installed APM dependencies
+apm_modules/
+
+# Local agent settings
+.claude/settings.local.json
+
+# IDE
+.idea/
