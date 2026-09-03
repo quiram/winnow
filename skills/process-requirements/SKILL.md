@@ -31,7 +31,7 @@ Before analysing anything, find and read the project's AI context — the "advan
 
 You cannot triage well without this baseline: relevance is defined relative to what the project already knows and cares about.
 
-If no AI context exists, say so plainly. You may still triage the input, but flag that placement of knowledge will be unreliable and recommend establishing an AI context first. In an interactive session, ask whether to continue anyway; in a batch run, continue but record the missing context as the first open question in the proposal.
+If no AI context exists, say so plainly. You may still triage the input, but flag that placement of knowledge will be unreliable, recommend establishing an AI context first, and ask whether to continue anyway.
 
 ## Step 2 — Gather the input
 
@@ -79,7 +79,7 @@ Present your findings in the chat: a short summary, then the proposed context up
 
 ## Step 6 — Write the proposal and hand off
 
-Write the proposal — containing only the approved items — **outside the repo** — the pipeline must leave no footprint in the host project, so never create working files or gitignore entries inside it. Prefer the coding agent's own staging area: if your harness provides a scratchpad or temporary-files directory for the session, put the proposal there. Only when no such area exists, fall back to:
+Write the proposal, containing only the approved items, **outside the repo**: the pipeline must leave no footprint in the host project, so never create working files or gitignore entries inside it. Prefer the coding agent's own staging area: if your harness provides a scratchpad or temporary-files directory for the session, put the proposal there. Only when no such area exists, fall back to:
 
 ```
 /tmp/winnow/<repo-folder-name>-<hash>/proposals/YYYY-MM-DD-<topic-slug>.md
