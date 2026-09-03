@@ -55,7 +55,7 @@ The handoff between skills is a structured markdown file kept **outside the cons
 The skills assume they run inside a mono/meta-repo that carries the project's durable knowledge:
 
 - **An AI context** — an "advanced README" (e.g. `AGENTS.md`, `CLAUDE.md`, `docs/`) covering the project's purpose, domain, tech stack, and conventions. Its goal: people and AI alike know how to work on the project after reading it.
-- **A doc map** — meta-documentation saying which kind of knowledge belongs in which document. Without it, update-context refuses to guess.
+- **A doc map** — an indication of which kind of knowledge belongs in which document. This may be explicit meta-documentation, or implicit in the structure of the README, `CLAUDE.md`, `AGENTS.md`, or similar. Without either, update-context refuses to guess.
 - **A named task tracker** — the context must say where tasks live and, ideally, how to interact with it (cheatsheets, templates, conventions). The skills are fully tracker-agnostic; the project's docs are the only source of tracker knowledge.
 
 Where any of these is missing, the skills surface the gap instead of working around it — and offer to record the answer so the gap closes permanently.

@@ -34,7 +34,7 @@ Only when nothing local exists, carry on with the steps below.
 
 ## Step 3 — Find the doc map
 
-The project is expected to have meta-documentation describing which kind of knowledge goes in which document (a doc map). Look for it in the AI context entry point (`AGENTS.md`, `CLAUDE.md`, a `docs/README.md`, or wherever the project's conventions point).
+The project is expected to indicate which kind of knowledge goes in which document (a doc map). This need not be a dedicated meta-document: it may be explicit meta-documentation, or implicit in the structure and instructions of `README.md`, `CLAUDE.md`, `AGENTS.md`, or a similar entry point — a context file whose sections and cross-references make clear where each kind of knowledge lives counts as a doc map. Look in the AI context entry points, or wherever the project's conventions point.
 
 **If no doc map exists, stop.** Do not guess placement — that is exactly how context rots into an incoherent pile of sentences. Tell the user this is a structural gap in how the project records knowledge, and offer two ways forward:
 
