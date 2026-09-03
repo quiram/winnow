@@ -6,11 +6,6 @@ description: >-
   updates and well-formed task-tracker tickets.
 author: Abraham Marin Perez
 license: MIT
-# Which agent platforms to deploy to when installing locally.
-# Resolution order: --target flag > this field > auto-detect from filesystem.
-# Accepted values: agent-skills, antigravity, claude, codex, copilot, cursor, gemini, grok-build, kiro, opencode, vscode, windsurf
-targets:
-  - claude
 dependencies:
   apm: []
   mcp: []
