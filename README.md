@@ -4,7 +4,7 @@
 
 # winnow
 
-Agent skills for managing a software product's requirements and roadmap. They distil brainstorming conversations and meeting transcripts into two kinds of output — durable project knowledge and tracker-ready tasks — while keeping a human in the loop before anything permanent changes.
+Agent skills for managing a software product's requirements and roadmap. They distil brainstorming conversations and meeting transcripts into two kinds of output — durable project knowledge and tracker-ready tasks — agreed with the user in conversation before anything permanent changes.
 
 The package is agent-agnostic: it is distributed with [APM (Agent Package Manager)](https://microsoft.github.io/apm/), so the same skills deploy to Claude Code, GitHub Copilot, Cursor, Codex, and any other harness APM supports. This repo is both the package and the marketplace that serves it.
 
@@ -16,7 +16,7 @@ That is precisely what these skills do to a conversation. A meeting transcript o
 
 ## The pipeline
 
-Three skills, deliberately separated so a human checkpoint sits between analysis and application:
+Three skills, split along a separation of concerns: distilling knowledge from a source and deciding where it belongs is one job; applying it to its destination is another. Before applying anything, the skills summarise what is about to happen:
 
 ```mermaid
 flowchart LR

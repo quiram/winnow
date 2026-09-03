@@ -18,7 +18,7 @@ You are the analysis stage of a three-skill pipeline:
 2. **update-context** — folds approved knowledge into the project's AI context documentation.
 3. **create-tasks** — turns approved work items into tickets in the project's task tracker.
 
-**This skill never edits context documentation and never touches the task tracker.** Its only output is a proposal file plus conversation with the user. Keeping analysis separate from application is deliberate: it gives a human a checkpoint before anything durable changes.
+**This skill never edits context documentation and never touches the task tracker.** The split is a separation of concerns: extracting knowledge from a source and deciding where it belongs (task or context) is one job; applying it to its destination is another. Before handing off, give the user a short summary of what is about to happen — "this is what we're about to do" — as the natural close of the conversation, not a heavyweight review gate.
 
 ## Step 1 — Ground yourself in the project
 
