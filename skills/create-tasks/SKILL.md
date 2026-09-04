@@ -48,7 +48,7 @@ Apply these defaults to every candidate task; the project's own task-creation in
 
 3. **Check for conflicts.** Look for existing tickets that the new ones would contradict, duplicate in part, or clash with (e.g. an open ticket building the thing this one removes). Surface any conflict and resolve it with the user before creating anything.
 
-4. **One goal per ticket.** If a candidate task serves two or more goals, or its goal is too broad to have a crisp done-state, split it into several tickets — and **confirm the split with the user before creating them**.
+4. **One goal per ticket.** If a candidate task serves two or more goals, or its goal is too broad to have a crisp done-state, split it into several tickets — and **confirm the split with the user before creating them**. Before drafting each ticket, also scan the proposal's supporting detail/"what's known" text for that task — not just its stated title/goal — for any embedded finding that has its own distinct goal and done-state separate from the task's stated goal. If found, treat it as a missed split: confirm with the user whether it should become its own ticket before proceeding, the same as an explicit second goal would trigger.
 
 5. **Prefer independent tickets.** Write tickets so they can be executed in any order. Where a dependency is genuinely unavoidable, make it explicit: use the tracker's native relations if it has them (JIRA's "blocked by"/"depends on", GitHub's task-list or dependency links, Linear's blocking relations); otherwise state the dependency prominently in the ticket description.
 
