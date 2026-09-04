@@ -57,6 +57,8 @@ Sort everything in the input into exactly one of three buckets (or the fourth, h
 
 **Actionable work → candidate task.** Concrete work someone must do. The test: it has a plausible done-state and a *why* (a business goal, even an indirect one). A vague aspiration with no done-state is not a task — it is either knowledge (record the goal) or a gap (ask about it).
 
+A side-finding turned up while investigating one candidate task — a technical fact discovered during research that itself has its own plausible done-state and its own why — is never folded into that task's description as supporting detail. Apply the same test (plausible done-state + a why) to every discrete finding individually, not just to the thing the user originally reported, and write anything that passes it up as its own separate entry under "Tasks" in the proposal, no matter how closely it is related to the task that led you to it. Two findings that would require different people, different systems, or different "done" conditions to resolve are different tasks, regardless of shared origin.
+
 **Both.** A decision often implies work ("we're switching to PostgreSQL" = knowledge *and* a migration task). Record it in both sections and cross-reference the items.
 
 When in doubt between irrelevant and knowledge, prefer to surface it as a question rather than silently discarding or silently recording.
