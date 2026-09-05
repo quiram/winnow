@@ -36,10 +36,15 @@ Only when nothing local exists, carry on with the steps below.
 
 The project is expected to indicate which kind of knowledge goes in which document (a doc map). This need not be a dedicated meta-document: it may be explicit meta-documentation, or implicit in the structure and instructions of `README.md`, `CLAUDE.md`, `AGENTS.md`, or a similar entry point — a context file whose sections and cross-references make clear where each kind of knowledge lives counts as a doc map. Look in the AI context entry points, or wherever the project's conventions point.
 
-**If no doc map exists, stop.** Do not guess placement — that is exactly how context rots into an incoherent pile of sentences. Tell the user this is a structural gap in how the project records knowledge, and offer two ways forward:
+**If no doc map exists, propose one.** Do not guess placement item-by-item, and do not ask the user to invent a structure from a blank page — that is exactly how context rots into an incoherent pile of sentences, or never gets structured at all. Instead, tell the user this is a structural gap in how the project records knowledge, and bring a concrete default structure for them to approve, amend, or reject:
 
-1. **Cancel** — leave the proposal untouched for later.
-2. **Define the structure now** — the user describes (or asks you to draft, for their approval) which documents exist and what belongs in each. Record the agreed doc map into the AI context as your first update, then continue with the rest.
+- Documentation serves **both humans and AI agents**. That dual audience is the reason for the structure, not an afterthought.
+- `README.md` at the repo root is the starting point: it says what the project is and how to get started, then points into `docs/`. It does not accumulate content that belongs in `docs/`.
+- Each **domain** of knowledge gets its own subfolder under `docs/` (e.g. product/vision, technology, design) — adapt the folder names to the project's actual domains rather than proposing empty folders that match this example.
+- Every level carries its **own index** — a README naming what each file and subfolder below it contains, so a reader or agent can find the right document without opening several wrong ones first.
+- Indexes exist so agents can load context **selectively** rather than reading everything and filling the context window.
+
+Present this as a starting point tuned to the project at hand, not a rigid template. The user may cancel instead — leaving the proposal untouched for later — but explicit approval is still required before anything is written. Once agreed, record the doc map into the AI context as your first update, then continue with the rest.
 
 ## Step 4 — Place each item
 
