@@ -52,6 +52,14 @@ Apply these defaults to every candidate task; the project's own task-creation in
 
 5. **Prefer independent tickets.** Write tickets so they can be executed in any order. Where a dependency is genuinely unavoidable, make it explicit: use the tracker's native relations if it has them (JIRA's "blocked by"/"depends on", GitHub's task-list or dependency links, Linear's blocking relations); otherwise state the dependency prominently in the ticket description.
 
+6. **State the present requirement only.** A ticket description states what is required *now*; it must not narrate the ticket's own history. Never write "this ticket previously covered X, that half is dropped" into a body, and avoid dated-decision stamps ("Decision, 4th September 2026: ..."). State the requirement and its rationale in plain present tense. This applies equally to tickets the skill rewrites and to ones it creates fresh — a rescoped ticket's old scope does not belong quoted at the top of the new body.
+
+   When rescoping an existing ticket: rewrite the body to describe only what is now required, then add a **comment** explaining what changed and why. Whether this comment can stay brief depends on the tracker: if it keeps a revision history of the description (e.g. an edit log or diff view), a short comment pointing to that history suffices for minor changes, and a fuller explanation is only needed when the change is significant enough to warrant one. If the tracker does not track description history at all, be more verbose in the comment — it is the only record of what changed and why.
+
+   Don't confuse this with present-tense rationale for a *current* constraint, which does belong in the body — "blocked by #123 because the structure must settle first" is a live fact about the work, not history.
+
+   Before finishing, check each body for history framing (phrases like "previously", "used to", "no longer covers", "scope change", or a dated decision stamp). Any hit belongs in a comment instead.
+
 ### Default ticket shape
 
 Unless the project defines its own template:
@@ -59,9 +67,9 @@ Unless the project defines its own template:
 ```
 <Title: outcome-oriented, one goal>
 
-**Why:** <the business goal this serves>
+**Why:** <the business goal this serves, stated as present rationale>
 
-**What:** <the work, and enough context to do it without archaeology>
+**What:** <the work, and enough context to do it without archaeology — present requirement only, no history of how the ticket got here>
 
 **Done when:** <observable acceptance criteria>
 
