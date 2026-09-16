@@ -30,8 +30,10 @@ boundaries. What it does own is text-level batching: the finalized text
 segments coming back from transcription, from both channels, are batched
 into chunks of at least MIN_CHUNK and at most MAX_CHUNK seconds, flushed
 early at conversation-turn boundaries (a channel switch or a pause) once the
-minimum is met. That interleaving of two labelled channels is the reason the
-batching lives here and not in the generic single-stream transcriber.
+minimum is met; a long lull flushes even a below-minimum batch so a lone
+short statement never sits stranded through a silence. That interleaving of
+two labelled channels is the reason the batching lives here and not in the
+generic single-stream transcriber.
 """
 
 from __future__ import annotations
@@ -58,6 +60,7 @@ MIN_CHUNK = 5.0
 MAX_CHUNK = 60.0
 TURN_GAP = 2.0  # a pause this long counts as a turn boundary
 IDLE_FLUSH = 3.0  # flush pending segments after this much silence
+IDLE_FLUSH_ANY = 10.0  # after this long a lull, flush even a below-minimum batch
 MIC_LABEL = "Me"
 SYSTEM_LABEL = "Others"
 
@@ -417,7 +420,7 @@ class ChunkWriter:
             return
         span = self.pending[-1]["end"] - self.pending[0]["start"]
         idle = stream_now - self.pending[-1]["end"]
-        if idle >= IDLE_FLUSH and span >= MIN_CHUNK:
+        if (idle >= IDLE_FLUSH and span >= MIN_CHUNK) or idle >= IDLE_FLUSH_ANY:
             self.flush()
 
     def flush(self, force: bool = False) -> None:
