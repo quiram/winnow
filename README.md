@@ -16,7 +16,7 @@ That is precisely what these skills do to a conversation. A meeting transcript o
 
 ## The pipeline
 
-The core pipeline is three skills, split along a separation of concerns: distilling knowledge from a source and deciding where it belongs is one job; applying it to its destination is another. Two further skills feed the pipeline with audio: **transcribe-audio** turns recordings into transcripts locally, and **listen-to-meeting** accompanies a live meeting. Before applying anything, the skills summarise what is about to happen:
+The core pipeline is three skills, split along a separation of concerns: distilling knowledge from a source and deciding where it belongs is one job; applying it to its destination is another. Two further skills feed the pipeline with audio: **transcribe-audio** turns recordings into transcripts locally, and **listen-to-meeting** accompanies a live meeting. A companion **setup-audio** skill prepares the machine for both — **run it once per machine before first audio use**, so model downloads, native compilation, and permission prompts happen at a calm moment instead of the start of a meeting. Before applying anything, the skills summarise what is about to happen:
 
 ```mermaid
 flowchart LR
@@ -56,7 +56,11 @@ Converts audio to text entirely on the local machine with a Whisper-family model
 
 ### listen-to-meeting
 
-Listens to a meeting *while it happens* — the user's microphone and the system audio carrying the other participants, captured as two separate channels through the OS's own facilities (a Core Audio system-audio tap on macOS — audio only, no screen access — WASAPI loopback on Windows, PulseAudio/PipeWire monitor on Linux) — and does one narrow job: flag contradictions the room hasn't noticed, live, so they can be resolved on the spot. Explicit corrections are tracked silently; only genuinely unacknowledged conflicts, contradictions of recorded context, or build-changing ambiguities are surfaced, and the threshold is deliberately biased toward silence. It first verifies the whole capture path for the host OS and, if anything is missing, stops with setup instructions rather than starting a partial session. When the user says the meeting is over, it proposes running process-requirements on the full transcript — the formal pipeline is never run live and never auto-chained.
+Listens to a meeting *while it happens* — the user's microphone and the system audio carrying the other participants, captured as two separate channels through the OS's own facilities (a Core Audio system-audio tap on macOS — audio only, no screen access — WASAPI loopback on Windows, PulseAudio/PipeWire monitor on Linux) — and does one narrow job: flag contradictions the room hasn't noticed, live, so they can be resolved on the spot. Explicit corrections are tracked silently; only genuinely unacknowledged conflicts, contradictions of recorded context, or build-changing ambiguities are surfaced, and the threshold is deliberately biased toward silence. It first verifies the whole capture path for the host OS and, if anything is missing, hands over to setup-audio rather than starting a partial session. When the user says the meeting is over, it proposes running process-requirements on the full transcript — the formal pipeline is never run live and never auto-chained.
+
+### setup-audio
+
+One guided, idempotent pass that gets a machine ready for the two audio skills: it verifies [uv](https://docs.astral.sh/uv/) and the Python audio stack, compiles the macOS capture helper, walks the user through the OS permission, offers the one-time Whisper model download (~500 MB, cached per machine and shared by every project on it), and finishes with a live self-test — a short tone through the speakers proving that audio actually flows on both channels, not just that permissions claim to be granted. Recommended once per machine before first audio use; the audio skills also invoke it themselves when they find something missing. It ships no tooling of its own — it drives the same commands the other skills use.
 
 ## The proposal file
 

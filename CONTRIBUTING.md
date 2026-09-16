@@ -20,6 +20,7 @@ skills/
     SKILL.md
     scripts/listen.py                     # two-channel live capture -> chunked transcript files
     scripts/macos/SystemAudioCapture.swift # Core Audio system-audio tap helper, compiled on first run
+  setup-audio/SKILL.md                    # guided one-time preparation; drives the other skills' tooling
 ```
 
 ## Releasing
