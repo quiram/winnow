@@ -1,5 +1,5 @@
 name: winnow
-version: 0.6.0
+version: 0.7.0
 description: >-
   Skills for managing a software product's requirements and roadmap: distil
   brainstorming conversations, meeting transcripts and audio recordings into
@@ -41,4 +41,4 @@ marketplace:
         listen-to-meeting (flag contradictions and gaps live during a meeting) and
         setup-audio (guided one-time preparation of the audio stack).
       source: ./
-      version: 0.6.0
+      version: 0.7.0
