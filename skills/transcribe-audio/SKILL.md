@@ -21,7 +21,7 @@ Everything runs on this machine. The only network access ever made is the one-ti
 
 The work is done by `scripts/transcribe.py` (in this skill's directory), a self-contained script whose dependencies — [faster-whisper](https://github.com/SYSTRAN/faster-whisper) and numpy — are declared inline (PEP 723). Run it with `uv run`; uv resolves and caches the environment automatically, leaving no footprint in the host project.
 
-**Prerequisite: uv.** If `uv` is not on the PATH, stop and tell the user how to install it (`curl -LsSf https://astral.sh/uv/install.sh | sh`, or `brew install uv` on macOS, or `winget install astral-sh.uv` on Windows) — don't improvise a pip/venv workaround.
+**Prerequisite: uv.** If `uv` is not on the PATH — or anything else below reports missing — invoke the **setup-audio** skill, which owns installation and setup guidance for winnow's whole audio stack; don't improvise a pip/venv workaround.
 
 Check readiness (verifies imports and reports whether the model is cached):
 
@@ -29,7 +29,7 @@ Check readiness (verifies imports and reports whether the model is cached):
 uv run <this-skill-dir>/scripts/transcribe.py check
 ```
 
-If the model is not yet cached, the first transcription will download it (a few hundred MB). When that delay matters — or the machine will be offline later — prefetch it: `uv run .../transcribe.py prefetch`.
+If the model is not yet cached, the first transcription will download it (a few hundred MB). When that delay matters — or the machine will be offline later — prefetch it: `uv run .../transcribe.py prefetch` (setup-audio offers this as part of first-time preparation).
 
 ## File mode
 

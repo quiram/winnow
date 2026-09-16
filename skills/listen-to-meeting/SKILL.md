@@ -26,15 +26,9 @@ Before anything else, run the readiness check from this skill's directory:
 uv run <this-skill-dir>/scripts/listen.py check
 ```
 
-(If `uv` itself is missing, that is the first gap: tell the user to install it — `brew install uv`, `curl -LsSf https://astral.sh/uv/install.sh | sh`, or `winget install astral-sh.uv` — and stop.)
+If it ends with `ready: yes`, continue — though if it notes the Whisper model isn't cached yet, prefer getting that download done (via **setup-audio** or `listen.py prefetch`) before the meeting starts, not during it.
 
-The check detects the host OS and verifies the whole path: Python audio dependencies, microphone, the transcription engine, and the OS-specific system-audio capture route —
-
-- **macOS**: a small Core Audio system-audio tap helper (macOS 14.2+), compiled automatically on first use (needs the Xcode Command Line Tools) and gated behind the System Audio Recording permission — audio only, no screen access;
-- **Windows**: native WASAPI loopback;
-- **Linux**: the default sink's PulseAudio/PipeWire monitor source.
-
-If the check reports anything missing, relay its instructions to the user **and stop — do not start a partial listening session** (e.g. mic-only). Every reported gap is fixable by the user (grant a permission, accept the Xcode license, install a package); once fixed, re-run the check. If the Whisper model isn't cached yet, run `uv run .../listen.py prefetch` before the meeting starts, not during it.
+Anything else — including `uv` itself being missing, so the check can't even run — is a setup problem, and setup is not this skill's job: invoke the **setup-audio** skill, which owns all installation, permission, and download guidance, and **do not start listening until it reports the machine ready. Never start a partial session** (e.g. mic-only).
 
 ## Step 2 — Start listening, and say how to stop
 
