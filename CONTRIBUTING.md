@@ -19,7 +19,7 @@ skills/
   listen-to-meeting/
     SKILL.md
     scripts/listen.py                     # two-channel live capture -> chunked transcript files
-    scripts/macos/SystemAudioCapture.swift # ScreenCaptureKit helper, compiled on first run
+    scripts/macos/SystemAudioCapture.swift # Core Audio system-audio tap helper, compiled on first run
 ```
 
 ## Releasing
