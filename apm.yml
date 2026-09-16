@@ -2,8 +2,9 @@ name: winnow
 version: 0.5.0
 description: >-
   Skills for managing a software product's requirements and roadmap: distil
-  brainstorming conversations and meeting transcripts into durable AI context
-  updates and well-formed task-tracker tickets.
+  brainstorming conversations, meeting transcripts and audio recordings into
+  durable AI context updates and well-formed task-tracker tickets, with local
+  audio transcription and live-meeting contradiction flagging.
 author: Abraham Marin Perez
 license: MIT
 dependencies:
@@ -34,7 +35,9 @@ marketplace:
       description: >-
         Requirements and roadmap management skills: process-requirements
         (distil input into a reviewable proposal), update-context (fold
-        approved knowledge into the project's AI context) and create-tasks
-        (turn approved work items into tracker tickets).
+        approved knowledge into the project's AI context), create-tasks
+        (turn approved work items into tracker tickets), transcribe-audio
+        (local Whisper transcription of files and live streams) and
+        listen-to-meeting (flag contradictions live during a meeting).
       source: ./
       version: 0.5.0
