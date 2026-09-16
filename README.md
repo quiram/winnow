@@ -16,11 +16,15 @@ That is precisely what these skills do to a conversation. A meeting transcript o
 
 ## The pipeline
 
-Three skills, split along a separation of concerns: distilling knowledge from a source and deciding where it belongs is one job; applying it to its destination is another. Before applying anything, the skills summarise what is about to happen:
+The core pipeline is three skills, split along a separation of concerns: distilling knowledge from a source and deciding where it belongs is one job; applying it to its destination is another. Audio needs no separate step from the user: hand process-requirements a voice note or recording and it delegates transcription to **transcribe-audio** transparently (that skill also works standalone), while **listen-to-meeting** accompanies a live meeting. A companion **setup-audio** skill prepares the machine for both — **run it once per machine before first audio use**, so model downloads, native compilation, and permission prompts happen at a calm moment instead of the start of a meeting. Before applying anything, the skills summarise what is about to happen:
 
 ```mermaid
 flowchart LR
-    A[Conversation /<br/>transcripts] --> P[process-requirements]
+    A[Conversation /<br/>transcripts /<br/>voice notes] --> P[process-requirements]
+    M[Live meeting] --> L[listen-to-meeting]
+    L -->|full transcript,<br/>on confirmation| P
+    P -.->|audio input| TA[transcribe-audio]
+    TA -.->|transcript| P
     P --> F[Internal handover<br/><i>short-lived, outside the repo</i>]
     F -->|approved knowledge| C[update-context]
     F -->|approved tasks| T[create-tasks]
@@ -30,7 +34,7 @@ flowchart LR
 
 ### process-requirements
 
-Works conversationally, whether the input is a live brainstorm or one or more meeting transcripts (inline, as files, or as links, provided a tool with access exists) worked through with the user. It triages everything into three buckets:
+Works conversationally, whether the input is a live brainstorm or one or more meeting transcripts worked through with the user — inline, as files, as links (provided a tool with access exists), or as audio recordings, which it hands to transcribe-audio behind the scenes. It triages everything into three buckets:
 
 - **irrelevant** — discarded; the skill lists what it dropped when presenting its findings, and keeps no record beyond that;
 - **durable knowledge** — things anyone working on the project later would need, destined for the AI context;
@@ -45,6 +49,18 @@ Applies a proposal's approved knowledge to the project's AI context documentatio
 ### create-tasks
 
 Turns a proposal's approved tasks into tickets. It discovers the tracker and its tooling (CLI, MCP server, API credentials) from the project's own documentation, probes access non-destructively, and stops with a precise report if anything is missing. If more than one tracker is plausible, it asks — it never assumes. Ticket defaults, overridable by project conventions: business goal first, dedupe against existing tickets, check for conflicts, one goal per ticket (splits confirmed with the user), and independent tickets wherever possible with tracker-native dependency links otherwise.
+
+### transcribe-audio
+
+Converts audio to text entirely on the local machine with a Whisper-family model ([faster-whisper](https://github.com/SYSTRAN/faster-whisper)) — no hosted transcription service, no account, no data leaving the machine (the model weights download once, then it works offline). **File mode** turns a complete recording — a WhatsApp voice note, an exported meeting recording — into a transcript in one shot; process-requirements uses this to accept audio directly. **Streaming mode** turns a live PCM feed into finalized transcript segments as they become stable; listen-to-meeting builds on it. The only prerequisite is [uv](https://docs.astral.sh/uv/): the bundled script declares its own dependencies inline, so nothing is installed into the host project.
+
+### listen-to-meeting
+
+Listens to a meeting *while it happens* — the user's microphone and the system audio carrying the other participants, captured as two separate channels through the OS's own facilities (a Core Audio system-audio tap on macOS — audio only, no screen access — WASAPI loopback on Windows, PulseAudio/PipeWire monitor on Linux) — and does one narrow job: flag what the room hasn't noticed — contradictions, and gaps where the discussion builds on information nobody has stated — live, so they can be resolved on the spot. Explicit corrections are tracked silently; only genuinely unacknowledged conflicts, contradictions of recorded context, build-changing ambiguities, or unanchored gaps are surfaced, and the threshold is deliberately biased toward silence — gaps especially are given time to resolve themselves before being raised. It first verifies the whole capture path for the host OS and, if anything is missing, hands over to setup-audio rather than starting a partial session. When the user says the meeting is over, it proposes running process-requirements on the full transcript — the formal pipeline is never run live and never auto-chained.
+
+### setup-audio
+
+One guided, idempotent pass that gets a machine ready for the two audio skills: it verifies [uv](https://docs.astral.sh/uv/) and the Python audio stack, compiles the macOS capture helper, walks the user through the OS permission, offers the one-time Whisper model download (~500 MB, cached per machine and shared by every project on it), and finishes with a live self-test — a short tone through the speakers proving that audio actually flows on both channels, not just that permissions claim to be granted. Recommended once per machine before first audio use; the audio skills also invoke it themselves when they find something missing. It ships no tooling of its own — it drives the same commands the other skills use.
 
 ## The proposal file
 

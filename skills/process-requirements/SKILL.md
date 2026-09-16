@@ -6,8 +6,9 @@ description: >-
   work, surfaces gaps, conflicts and ambiguities, agrees the findings with the
   user, and hands them to the update-context and create-tasks skills. Use when
   brainstorming product requirements or roadmap items, when given one or more
-  meeting transcripts or notes to process, or when asked to extract
-  requirements, decisions or actions from a discussion.
+  meeting transcripts, notes or audio recordings (e.g. a voice note) to
+  process, or when asked to extract requirements, decisions or actions from a
+  discussion.
 ---
 
 # Process requirements
@@ -43,7 +44,8 @@ This skill works conversationally: a person is present to answer questions, whet
 
 - **inline** — text pasted into the conversation;
 - **as files** — read them from disk;
-- **as links** — before doing anything else, check you actually have a tool that can access the link (e.g. a Granola MCP server for Granola transcripts, an authenticated fetch for a private doc). If no suitable tool or permission is available, stop and tell the user exactly what is missing — never guess at a transcript's content.
+- **as links** — before doing anything else, check you actually have a tool that can access the link (e.g. a Granola MCP server for Granola transcripts, an authenticated fetch for a private doc). If no suitable tool or permission is available, stop and tell the user exactly what is missing — never guess at a transcript's content;
+- **as audio** — a voice note or meeting recording (e.g. a WhatsApp audio message): obtain the transcript by invoking the **transcribe-audio** skill in file mode, then treat the result exactly like a supplied transcript. Keep the transcript in a working file outside the repo (the same scratchpad/staging area the proposal will use). If transcribe-audio or its prerequisites are unavailable, stop and relay exactly what is missing — never guess at audio content.
 
 With multiple transcripts, process them all and keep per-source provenance: sources can disagree, and the user will want to know who said what. After reading them, continue conversationally — raise gaps and conflicts with the user before settling your findings.
 

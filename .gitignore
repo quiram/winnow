@@ -9,3 +9,6 @@ apm_modules/
 
 # IDE
 .idea/
+
+# Python bytecode (from running the bundled scripts)
+__pycache__/
