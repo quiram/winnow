@@ -43,6 +43,7 @@ if checkMode {
 
 final class AudioStreamOutput: NSObject, SCStreamOutput, SCStreamDelegate {
     private let out = FileHandle.standardOutput
+    private var reportedExtractionError = false
 
     func stream(
         _ stream: SCStream,
@@ -68,6 +69,10 @@ final class AudioStreamOutput: NSObject, SCStreamOutput, SCStreamDelegate {
                 }
             }
         } catch {
+            if !reportedExtractionError {
+                reportedExtractionError = true
+                stderrLine("audio buffer extraction failed: \(error)")
+            }
             return
         }
         guard !pcm.isEmpty else { return }
@@ -91,6 +96,9 @@ if !CGPreflightScreenCaptureAccess() {
 }
 
 let output = AudioStreamOutput()
+// Retained globally: SCStream stops delivering (and can be deallocated)
+// if the only reference dies with the startup Task.
+var activeStream: SCStream?
 
 Task {
     do {
@@ -113,6 +121,7 @@ Task {
         config.minimumFrameInterval = CMTime(value: 1, timescale: 1)
 
         let stream = SCStream(filter: filter, configuration: config, delegate: output)
+        activeStream = stream
         try stream.addStreamOutput(
             output, type: .audio,
             sampleHandlerQueue: DispatchQueue(label: "winnow.audio")
