@@ -17,11 +17,14 @@ module), and writes finalized transcript chunks to files that the agent
 polls. Everything runs on this machine; no hosted service is involved.
 
 Commands:
-  check   verify the capture path for this OS and report actionable,
-          OS-specific setup instructions for anything missing (exit 0 = ready)
-  run     capture until stopped: --session-dir receives chunk-NNNN.txt files,
-          a running transcript.md, and status.json. Stop by creating a file
-          named `stop` in the session dir (or SIGTERM/SIGINT).
+  check     verify the capture path for this OS and report actionable,
+            OS-specific setup instructions for anything missing (exit 0 = ready)
+  selftest  prove audio actually flows: capture both channels for a few
+            seconds while playing a short test tone through the speakers,
+            and report whether each channel produced real signal
+  run       capture until stopped: --session-dir receives chunk-NNNN.txt files,
+            a running transcript.md, and status.json. Stop by creating a file
+            named `stop` in the session dir (or SIGTERM/SIGINT).
 
 Layering: all audio-level segmentation — voice-activity detection and
 utterance finalization — belongs to transcribe-audio's StreamSegmenter; this
@@ -402,6 +405,103 @@ def cmd_check(args) -> int:
     return 0 if ready else 1
 
 
+class _NullSink:
+    """Stands in for a StreamSegmenter when only signal detection matters."""
+
+    def feed_float32(self, samples) -> None:
+        pass
+
+
+def play_test_tone() -> bool:
+    """Play a short, gentle tone through the default output; True on success."""
+    import math
+    import struct
+    import tempfile
+    import wave
+
+    path = Path(tempfile.gettempdir()) / "winnow-selftest-tone.wav"
+    rate = 44_100
+    length = int(rate * 1.5)
+    with wave.open(str(path), "wb") as fh:
+        fh.setnchannels(1)
+        fh.setsampwidth(2)
+        fh.setframerate(rate)
+        frames = bytearray()
+        for i in range(length):
+            envelope = min(1.0, i / 2000, (length - i) / 2000)  # no clicks
+            value = int(12_000 * envelope * math.sin(2 * math.pi * 440 * i / rate))
+            frames += struct.pack("<h", value)
+        fh.writeframes(bytes(frames))
+
+    if sys.platform == "darwin":
+        commands = [["afplay", str(path)]]
+    elif sys.platform == "win32":
+        commands = [
+            [
+                "powershell", "-NoProfile", "-Command",
+                f"(New-Object Media.SoundPlayer '{path}').PlaySync()",
+            ]
+        ]
+    else:
+        commands = [
+            ["pw-play", str(path)],
+            ["paplay", str(path)],
+            ["aplay", "-q", str(path)],
+        ]
+    for command in commands:
+        if shutil.which(command[0]):
+            return subprocess.run(command, capture_output=True).returncode == 0
+    return False
+
+
+def cmd_selftest(args) -> int:
+    import numpy as np
+
+    print(
+        "self-test: capturing from both channels; a short test tone will play "
+        "through the speakers (output should be unmuted and audible)",
+        file=sys.stderr,
+    )
+    stop_event = threading.Event()
+    session_t0 = time.monotonic()
+    mic_channel = Channel(MIC_LABEL, _NullSink(), np)
+    system_channel = Channel(SYSTEM_LABEL, _NullSink(), np)
+    mic_stream = start_mic_capture(mic_channel, session_t0, stop_event)
+    system_cleanup = start_system_capture(system_channel, session_t0, stop_event)
+
+    time.sleep(1.0)  # let both captures settle
+    played = play_test_tone()
+    time.sleep(1.0)  # let the tail of the tone arrive
+
+    stop_event.set()
+    try:
+        mic_stream.stop()
+        mic_stream.close()
+    except Exception:
+        pass
+    try:
+        system_cleanup()
+    except Exception:
+        pass
+
+    ok = True
+    for channel, name in ((mic_channel, "microphone"), (system_channel, "system audio")):
+        if channel.saw_signal:
+            print(f"{name} ({channel.label}): signal detected — ok")
+        else:
+            ok = False
+            print(f"{name} ({channel.label}): NO SIGNAL — {channel.silence_warning()}")
+    if not played:
+        ok = False
+        print(
+            "could not play the test tone automatically; play any sound manually "
+            "and re-run",
+            file=sys.stderr,
+        )
+    print(f"\nself-test: {'pass' if ok else 'FAIL'}")
+    return 0 if ok else 1
+
+
 def cmd_prefetch(args) -> int:
     from transcribe import Transcriber
 
@@ -647,6 +747,12 @@ def main() -> int:
 
     p_prefetch = sub.add_parser("prefetch", parents=[common], help="download/load the model now")
     p_prefetch.set_defaults(func=cmd_prefetch)
+
+    p_selftest = sub.add_parser(
+        "selftest", parents=[common],
+        help="capture both channels while playing a test tone; verify real signal",
+    )
+    p_selftest.set_defaults(func=cmd_selftest)
 
     p_run = sub.add_parser("run", parents=[common], help="capture until stopped")
     p_run.add_argument("--session-dir", required=True, help="directory for chunks, transcript and status")
