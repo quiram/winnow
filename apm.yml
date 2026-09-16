@@ -4,7 +4,7 @@ description: >-
   Skills for managing a software product's requirements and roadmap: distil
   brainstorming conversations, meeting transcripts and audio recordings into
   durable AI context updates and well-formed task-tracker tickets, with local
-  audio transcription and live-meeting contradiction flagging.
+  audio transcription and live-meeting contradiction and gap flagging.
 author: Abraham Marin Perez
 license: MIT
 dependencies:
@@ -38,7 +38,7 @@ marketplace:
         approved knowledge into the project's AI context), create-tasks
         (turn approved work items into tracker tickets), transcribe-audio
         (local Whisper transcription of files and live streams),
-        listen-to-meeting (flag contradictions live during a meeting) and
+        listen-to-meeting (flag contradictions and gaps live during a meeting) and
         setup-audio (guided one-time preparation of the audio stack).
       source: ./
       version: 0.5.0
