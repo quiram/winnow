@@ -30,7 +30,7 @@ uv run <this-skill-dir>/scripts/listen.py check
 
 The check detects the host OS and verifies the whole path: Python audio dependencies, microphone, the transcription engine, and the OS-specific system-audio capture route —
 
-- **macOS**: a small ScreenCaptureKit helper, compiled automatically on first use (needs the Xcode Command Line Tools) and gated behind the Screen Recording permission;
+- **macOS**: a small Core Audio system-audio tap helper (macOS 14.2+), compiled automatically on first use (needs the Xcode Command Line Tools) and gated behind the System Audio Recording permission — audio only, no screen access;
 - **Windows**: native WASAPI loopback;
 - **Linux**: the default sink's PulseAudio/PipeWire monitor source.
 
@@ -46,7 +46,7 @@ uv run <this-skill-dir>/scripts/listen.py run --session-dir <session-dir>
 
 It loads the model, captures both channels, and writes finalized transcript chunks to `<session-dir>/chunks/chunk-NNNN.txt` (atomically — a chunk file is complete the moment it exists), plus a running `transcript.md` and a `status.json` heartbeat. All audio-level work — voice-activity detection, utterance finalization, transcription — is delegated to transcribe-audio; the tool here only captures raw audio and batches the transcribed *text* from the two channels into chunks: minimum ~5 s, maximum ~60 s, flushed early at conversation-turn boundaries (a channel switch or a pause).
 
-Confirm from its startup output that it is actually capturing before telling the user you're listening — and check `status.json` again after ~15 seconds: a non-empty `warnings` list means a channel is dead or producing pure silence even though capture started (for example, a macOS permission that covers the screen but not system audio). Relay any warning to the user immediately and let them decide whether to fix it or knowingly continue with one channel.
+Confirm from its startup output that it is actually capturing before telling the user you're listening — and keep an eye on `status.json`'s `warnings` list early in the session: an entry means a channel has produced no signal at all (dead capture, a muted mic, a missing permission). A silent system channel can also just mean no other participant has spoken yet, so the warning clears itself once audio arrives; if it persists while others are audibly speaking, relay it to the user and let them decide whether to fix it or knowingly continue with one channel.
 
 **Immediately tell the user how to end the session.** Say it explicitly — don't leave them guessing. For example:
 

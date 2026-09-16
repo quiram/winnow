@@ -61,6 +61,7 @@ MAX_CHUNK = 60.0
 TURN_GAP = 2.0  # a pause this long counts as a turn boundary
 IDLE_FLUSH = 3.0  # flush pending segments after this much silence
 IDLE_FLUSH_ANY = 10.0  # after this long a lull, flush even a below-minimum batch
+SILENCE_CHECK_AFTER = 15.0  # grace period before warning about a signal-less channel
 MIC_LABEL = "Me"
 SYSTEM_LABEL = "Others"
 
@@ -134,14 +135,13 @@ class Channel:
             if self.label == SYSTEM_LABEL and sys.platform == "darwin":
                 hint = (
                     " — check System Settings > Privacy & Security > Screen & "
-                    "System Audio Recording: the terminal's permission must "
-                    "include system audio ('Screen & Audio', not 'Screen Only'), "
-                    "then restart the terminal"
+                    "System Audio Recording: the terminal must be allowed under "
+                    "'System Audio Recording Only', then restart the terminal"
                 )
             elif self.label == MIC_LABEL:
                 hint = " — is the microphone muted, or is another input device selected?"
             return (
-                f"the {self.label} channel is producing pure digital silence{hint}"
+                f"the {self.label} channel has produced no audio signal so far{hint}"
             )
         return None
 
@@ -163,7 +163,7 @@ def start_mic_capture(channel: Channel, session_t0: float, stop_event: threading
 
 
 def macos_helper_binary(compile_if_missing: bool = True) -> Path:
-    """Compile the ScreenCaptureKit helper on first use; cache by source hash."""
+    """Compile the Core Audio tap helper on first use; cache by source hash."""
     source = Path(__file__).resolve().parent / "macos" / "SystemAudioCapture.swift"
     digest = hashlib.sha256(source.read_bytes()).hexdigest()[:12]
     cache_dir = Path.home() / ".cache" / "winnow"
@@ -340,7 +340,7 @@ def cmd_check(args) -> int:
     if sys.platform == "darwin":
         if not shutil.which("swiftc"):
             report(
-                "system audio (macOS/ScreenCaptureKit)",
+                "system audio (macOS Core Audio tap)",
                 False,
                 "swiftc not found — install Xcode Command Line Tools: "
                 "xcode-select --install",
@@ -351,7 +351,7 @@ def cmd_check(args) -> int:
             )
             if probe.returncode != 0 and "license" in (probe.stdout + probe.stderr).lower():
                 report(
-                    "system audio (macOS/ScreenCaptureKit)",
+                    "system audio (macOS Core Audio tap)",
                     False,
                     "Xcode license not accepted — run: sudo xcodebuild -license accept",
                 )
@@ -362,20 +362,21 @@ def cmd_check(args) -> int:
                         [str(binary), "--check"], capture_output=True, text=True
                     )
                     if check.returncode == 0:
-                        report("system audio (macOS/ScreenCaptureKit)", True, "permission granted")
+                        report("system audio (macOS Core Audio tap)", True, "permission granted")
                     else:
                         report(
-                            "system audio (macOS/ScreenCaptureKit)",
+                            "system audio (macOS Core Audio tap)",
                             False,
-                            "Screen Recording permission not granted. Grant it in "
-                            "System Settings > Privacy & Security > Screen & System "
-                            "Audio Recording (a prompt may have just appeared), then "
-                            "restart the terminal.",
+                            "System audio recording permission not granted. If a "
+                            "prompt just appeared, approve it; otherwise allow the "
+                            "terminal in System Settings > Privacy & Security > "
+                            "Screen & System Audio Recording, under 'System Audio "
+                            "Recording Only', then restart the terminal.",
                         )
                 except SystemExit:
                     raise
                 except Exception as exc:
-                    report("system audio (macOS/ScreenCaptureKit)", False, str(exc))
+                    report("system audio (macOS Core Audio tap)", False, str(exc))
     elif sys.platform == "win32":
         try:
             import soundcard as sc
@@ -542,7 +543,7 @@ def cmd_run(args) -> int:
     print(f"listening; session dir: {session_dir}", file=sys.stderr)
     last_status = 0.0
     warnings: list[str] = []
-    silence_checked = False
+    warning_state: dict[str, str | None] = {c.label: None for c in channels}
     try:
         while not stop_event.is_set():
             time.sleep(0.25)
@@ -563,13 +564,21 @@ def cmd_run(args) -> int:
                     drained = True
             stream_now = time.monotonic() - session_t0
             writer.maybe_idle_flush(stream_now)
-            if not silence_checked and stream_now >= 10.0:
-                silence_checked = True
+            if stream_now >= SILENCE_CHECK_AFTER:
+                # A silent channel can be legitimate (nobody playing audio yet),
+                # so the warning is live state: it clears once signal arrives.
                 for channel in channels:
                     warning = channel.silence_warning()
-                    if warning:
-                        warnings.append(warning)
+                    previous = warning_state[channel.label]
+                    if warning and warning != previous:
                         print(f"warning: {warning}", file=sys.stderr)
+                    elif previous and not warning:
+                        print(
+                            f"note: the {channel.label} channel is now receiving audio",
+                            file=sys.stderr,
+                        )
+                    warning_state[channel.label] = warning
+                warnings = [w for w in warning_state.values() if w]
             if drained or stream_now - last_status >= 5.0:
                 last_status = stream_now
                 status_path.write_text(
