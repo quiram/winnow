@@ -13,6 +13,13 @@ skills/
   process-requirements/SKILL.md
   update-context/SKILL.md
   create-tasks/SKILL.md
+  transcribe-audio/
+    SKILL.md
+    scripts/transcribe.py                 # local Whisper transcription (file + streaming), PEP 723 deps, run with uv
+  listen-to-meeting/
+    SKILL.md
+    scripts/listen.py                     # two-channel live capture -> chunked transcript files
+    scripts/macos/SystemAudioCapture.swift # ScreenCaptureKit helper, compiled on first run
 ```
 
 ## Releasing

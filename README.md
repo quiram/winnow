@@ -16,11 +16,15 @@ That is precisely what these skills do to a conversation. A meeting transcript o
 
 ## The pipeline
 
-Three skills, split along a separation of concerns: distilling knowledge from a source and deciding where it belongs is one job; applying it to its destination is another. Before applying anything, the skills summarise what is about to happen:
+The core pipeline is three skills, split along a separation of concerns: distilling knowledge from a source and deciding where it belongs is one job; applying it to its destination is another. Two further skills feed the pipeline with audio: **transcribe-audio** turns recordings into transcripts locally, and **listen-to-meeting** accompanies a live meeting. Before applying anything, the skills summarise what is about to happen:
 
 ```mermaid
 flowchart LR
     A[Conversation /<br/>transcripts] --> P[process-requirements]
+    V[Audio /<br/>voice notes] --> TA[transcribe-audio]
+    TA --> P
+    M[Live meeting] --> L[listen-to-meeting]
+    L -->|full transcript,<br/>on confirmation| P
     P --> F[Internal handover<br/><i>short-lived, outside the repo</i>]
     F -->|approved knowledge| C[update-context]
     F -->|approved tasks| T[create-tasks]
@@ -30,7 +34,7 @@ flowchart LR
 
 ### process-requirements
 
-Works conversationally, whether the input is a live brainstorm or one or more meeting transcripts (inline, as files, or as links, provided a tool with access exists) worked through with the user. It triages everything into three buckets:
+Works conversationally, whether the input is a live brainstorm or one or more meeting transcripts (inline, as files, as links provided a tool with access exists, or as audio recordings transcribed via transcribe-audio) worked through with the user. It triages everything into three buckets:
 
 - **irrelevant** — discarded; the skill lists what it dropped when presenting its findings, and keeps no record beyond that;
 - **durable knowledge** — things anyone working on the project later would need, destined for the AI context;
@@ -45,6 +49,14 @@ Applies a proposal's approved knowledge to the project's AI context documentatio
 ### create-tasks
 
 Turns a proposal's approved tasks into tickets. It discovers the tracker and its tooling (CLI, MCP server, API credentials) from the project's own documentation, probes access non-destructively, and stops with a precise report if anything is missing. If more than one tracker is plausible, it asks — it never assumes. Ticket defaults, overridable by project conventions: business goal first, dedupe against existing tickets, check for conflicts, one goal per ticket (splits confirmed with the user), and independent tickets wherever possible with tracker-native dependency links otherwise.
+
+### transcribe-audio
+
+Converts audio to text entirely on the local machine with a Whisper-family model ([faster-whisper](https://github.com/SYSTRAN/faster-whisper)) — no hosted transcription service, no account, no data leaving the machine (the model weights download once, then it works offline). **File mode** turns a complete recording — a WhatsApp voice note, an exported meeting recording — into a transcript in one shot; process-requirements uses this to accept audio directly. **Streaming mode** turns a live PCM feed into finalized transcript segments as they become stable; listen-to-meeting builds on it. The only prerequisite is [uv](https://docs.astral.sh/uv/): the bundled script declares its own dependencies inline, so nothing is installed into the host project.
+
+### listen-to-meeting
+
+Listens to a meeting *while it happens* — the user's microphone and the system audio carrying the other participants, captured as two separate channels through the OS's own facilities (ScreenCaptureKit on macOS, WASAPI loopback on Windows, PulseAudio/PipeWire monitor on Linux) — and does one narrow job: flag contradictions the room hasn't noticed, live, so they can be resolved on the spot. Explicit corrections are tracked silently; only genuinely unacknowledged conflicts, contradictions of recorded context, or build-changing ambiguities are surfaced, and the threshold is deliberately biased toward silence. It first verifies the whole capture path for the host OS and, if anything is missing, stops with setup instructions rather than starting a partial session. When the user says the meeting is over, it proposes running process-requirements on the full transcript — the formal pipeline is never run live and never auto-chained.
 
 ## The proposal file
 
