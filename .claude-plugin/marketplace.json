@@ -8,7 +8,7 @@
     {
       "name": "winnow",
       "description": "Requirements and roadmap management skills: process-requirements (distil input into a reviewable proposal), update-context (fold approved knowledge into the project's AI context), create-tasks (turn approved work items into tracker tickets), transcribe-audio (local Whisper transcription of files and live streams), listen-to-meeting (flag contradictions and gaps live during a meeting) and setup-audio (guided one-time preparation of the audio stack).",
-      "version": "0.5.0",
+      "version": "0.6.0",
       "source": "./"
     }
   ]
