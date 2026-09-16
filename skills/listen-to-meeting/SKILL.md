@@ -13,7 +13,7 @@ description: >-
 
 # Listen to meeting
 
-You are a live meeting watcher with two narrow jobs: flag contradictions the room hasn't noticed, and surface genuine gaps — statements that presuppose information nobody has stated, or that don't anchor to anything the project knows — while the people who can resolve them are still in the room. You do **not** triage requirements, update context, or create tasks live. When the meeting ends, you propose — never auto-run — **process-requirements** on the complete transcript, which is where the formal winnow pipeline begins, unchanged.
+You are a live meeting watcher with two narrow jobs: flag contradictions the room hasn't noticed, and surface genuine gaps — statements that presuppose information nobody has stated, or that don't anchor to anything the project knows — while the people who can resolve them are still in the room. You do **not** triage requirements, update context, or create tasks live. When the meeting ends, you propose — never auto-run — **process-requirements** on the complete transcript, which is where the formal winnow pipeline begins.
 
 Everything runs locally: capture through the OS's own facilities, transcription through the **transcribe-audio** skill's local Whisper model. No hosted transcription or meeting-bot service is ever involved.
 
@@ -41,7 +41,7 @@ uv run <this-skill-dir>/scripts/listen.py run --session-dir <session-dir>
 
 It loads the model, captures both channels, and writes finalized transcript chunks to `<session-dir>/chunks/chunk-NNNN.txt` (atomically — a chunk file is complete the moment it exists), plus a running `transcript.md` and a `status.json` heartbeat. All audio-level work — voice-activity detection, utterance finalization, transcription — is delegated to transcribe-audio; the tool here only captures raw audio and batches the transcribed *text* from the two channels into chunks: minimum ~5 s, maximum ~60 s, flushed early at conversation-turn boundaries (a channel switch or a pause).
 
-Confirm from its startup output that it is actually capturing before telling the user you're listening — and keep an eye on `status.json`'s `warnings` list early in the session: an entry means a channel has produced no signal at all (dead capture, a muted mic, a missing permission). A silent system channel can also just mean no other participant has spoken yet, so the warning clears itself once audio arrives; if it persists while others are audibly speaking, relay it to the user and let them decide whether to fix it or knowingly continue with one channel.
+Confirm from its startup output that it is actually capturing before telling the user you're listening — and keep an eye on `status.json`'s `warnings` list early in the session: an entry means a channel has produced no signal at all (dead capture, a muted mic, a missing permission). A silent system channel can also just mean no other participant has spoken yet, so the warning clears itself once audio arrives; if it persists once the meeting is clearly under way — the other channel keeps producing transcript, or several minutes have passed — relay it and ask the user, who knows whether that channel should have carried sound by now, and let them decide whether to fix it or knowingly continue with one channel.
 
 **Immediately tell the user how to end the session.** Say it explicitly — don't leave them guessing. For example:
 
@@ -71,7 +71,7 @@ Wait for new chunk files, using whatever mechanism your harness provides — a f
 4. **Apply the flagging threshold** below, and surface anything that passes it to the user in the chat, immediately — the value of a flag decays fast in a live meeting.
 5. Record the chunk number as processed in `meeting-state.md`.
 
-### Flagging threshold (v1 — expect to refine)
+### Flagging threshold
 
 Surface a flag **only** if at least one of these holds:
 

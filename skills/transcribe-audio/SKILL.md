@@ -49,7 +49,7 @@ Given a live audio source, emit finalized transcript segments as they become sta
 <audio-source> | uv run <this-skill-dir>/scripts/transcribe.py stream [--model <size>] [--language <code>]
 ```
 
-- **Input**: raw PCM on stdin — signed 16-bit little-endian, mono, 16 kHz.
+- **Input**: raw PCM on stdin — signed 16-bit little-endian, mono, 16 kHz. (On Windows, pipe via cmd or PowerShell 7.4+ — older PowerShell corrupts binary pipes. Callers that feed audio in-process, as listen-to-meeting does, are unaffected.)
 - **Output**: one JSON object per line on stdout, each a finalized utterance: `{"start": 12.4, "end": 15.1, "text": "..."}` (times in seconds from stream start).
 - **Finalization**: a voice-activity detector holds an utterance open (interim) while speech is still resolving, and finalizes it once ~0.6 s of trailing silence follows, or at 30 s regardless. Only finalized text is ever emitted; finalization happens continuously throughout the stream, not at the end.
 

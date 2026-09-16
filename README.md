@@ -16,15 +16,15 @@ That is precisely what these skills do to a conversation. A meeting transcript o
 
 ## The pipeline
 
-The core pipeline is three skills, split along a separation of concerns: distilling knowledge from a source and deciding where it belongs is one job; applying it to its destination is another. Two further skills feed the pipeline with audio: **transcribe-audio** turns recordings into transcripts locally, and **listen-to-meeting** accompanies a live meeting. A companion **setup-audio** skill prepares the machine for both — **run it once per machine before first audio use**, so model downloads, native compilation, and permission prompts happen at a calm moment instead of the start of a meeting. Before applying anything, the skills summarise what is about to happen:
+The core pipeline is three skills, split along a separation of concerns: distilling knowledge from a source and deciding where it belongs is one job; applying it to its destination is another. Audio needs no separate step from the user: hand process-requirements a voice note or recording and it delegates transcription to **transcribe-audio** transparently (that skill also works standalone), while **listen-to-meeting** accompanies a live meeting. A companion **setup-audio** skill prepares the machine for both — **run it once per machine before first audio use**, so model downloads, native compilation, and permission prompts happen at a calm moment instead of the start of a meeting. Before applying anything, the skills summarise what is about to happen:
 
 ```mermaid
 flowchart LR
-    A[Conversation /<br/>transcripts] --> P[process-requirements]
-    V[Audio /<br/>voice notes] --> TA[transcribe-audio]
-    TA --> P
+    A[Conversation /<br/>transcripts /<br/>voice notes] --> P[process-requirements]
     M[Live meeting] --> L[listen-to-meeting]
     L -->|full transcript,<br/>on confirmation| P
+    P -.->|audio input| TA[transcribe-audio]
+    TA -.->|transcript| P
     P --> F[Internal handover<br/><i>short-lived, outside the repo</i>]
     F -->|approved knowledge| C[update-context]
     F -->|approved tasks| T[create-tasks]
@@ -34,7 +34,7 @@ flowchart LR
 
 ### process-requirements
 
-Works conversationally, whether the input is a live brainstorm or one or more meeting transcripts (inline, as files, as links provided a tool with access exists, or as audio recordings transcribed via transcribe-audio) worked through with the user. It triages everything into three buckets:
+Works conversationally, whether the input is a live brainstorm or one or more meeting transcripts worked through with the user — inline, as files, as links (provided a tool with access exists), or as audio recordings, which it hands to transcribe-audio behind the scenes. It triages everything into three buckets:
 
 - **irrelevant** — discarded; the skill lists what it dropped when presenting its findings, and keeps no record beyond that;
 - **durable knowledge** — things anyone working on the project later would need, destined for the AI context;
