@@ -46,7 +46,7 @@ uv run <this-skill-dir>/scripts/listen.py run --session-dir <session-dir>
 
 It loads the model, captures both channels, and writes finalized transcript chunks to `<session-dir>/chunks/chunk-NNNN.txt` (atomically — a chunk file is complete the moment it exists), plus a running `transcript.md` and a `status.json` heartbeat. All audio-level work — voice-activity detection, utterance finalization, transcription — is delegated to transcribe-audio; the tool here only captures raw audio and batches the transcribed *text* from the two channels into chunks: minimum ~5 s, maximum ~60 s, flushed early at conversation-turn boundaries (a channel switch or a pause).
 
-Confirm from its startup output that it is actually capturing before telling the user you're listening.
+Confirm from its startup output that it is actually capturing before telling the user you're listening — and check `status.json` again after ~15 seconds: a non-empty `warnings` list means a channel is dead or producing pure silence even though capture started (for example, a macOS permission that covers the screen but not system audio). Relay any warning to the user immediately and let them decide whether to fix it or knowingly continue with one channel.
 
 **Immediately tell the user how to end the session.** Say it explicitly — don't leave them guessing. For example:
 

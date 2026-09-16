@@ -101,6 +101,8 @@ class Channel:
         self.decimator = Decimator(np)
         self.np = np
         self.started_at: float | None = None  # session-relative capture start
+        self.samples_fed = 0
+        self.saw_signal = False  # any non-zero sample seen
 
     def feed_int16_48k(self, pcm_bytes: bytes, session_t0: float) -> None:
         if self.started_at is None:
@@ -108,12 +110,40 @@ class Channel:
         samples = self.np.frombuffer(pcm_bytes, dtype=self.np.int16).astype(
             self.np.float32
         ) / 32768.0
+        self._track(samples)
         self.segmenter.feed_float32(self.decimator.process(samples))
 
     def feed_float32_48k(self, samples, session_t0: float) -> None:
         if self.started_at is None:
             self.started_at = time.monotonic() - session_t0
+        samples = self.np.asarray(samples, dtype=self.np.float32)
+        self._track(samples)
         self.segmenter.feed_float32(self.decimator.process(samples))
+
+    def _track(self, samples) -> None:
+        self.samples_fed += len(samples)
+        if not self.saw_signal and self.np.any(samples):
+            self.saw_signal = True
+
+    def silence_warning(self) -> str | None:
+        """A dead-channel diagnosis, or None if the channel looks alive."""
+        if self.samples_fed == 0:
+            return f"the {self.label} channel has received no audio data at all"
+        if not self.saw_signal:
+            hint = ""
+            if self.label == SYSTEM_LABEL and sys.platform == "darwin":
+                hint = (
+                    " — check System Settings > Privacy & Security > Screen & "
+                    "System Audio Recording: the terminal's permission must "
+                    "include system audio ('Screen & Audio', not 'Screen Only'), "
+                    "then restart the terminal"
+                )
+            elif self.label == MIC_LABEL:
+                hint = " — is the microphone muted, or is another input device selected?"
+            return (
+                f"the {self.label} channel is producing pure digital silence{hint}"
+            )
+        return None
 
 
 def start_mic_capture(channel: Channel, session_t0: float, stop_event: threading.Event):
@@ -511,6 +541,8 @@ def cmd_run(args) -> int:
 
     print(f"listening; session dir: {session_dir}", file=sys.stderr)
     last_status = 0.0
+    warnings: list[str] = []
+    silence_checked = False
     try:
         while not stop_event.is_set():
             time.sleep(0.25)
@@ -531,6 +563,13 @@ def cmd_run(args) -> int:
                     drained = True
             stream_now = time.monotonic() - session_t0
             writer.maybe_idle_flush(stream_now)
+            if not silence_checked and stream_now >= 10.0:
+                silence_checked = True
+                for channel in channels:
+                    warning = channel.silence_warning()
+                    if warning:
+                        warnings.append(warning)
+                        print(f"warning: {warning}", file=sys.stderr)
             if drained or stream_now - last_status >= 5.0:
                 last_status = stream_now
                 status_path.write_text(
@@ -539,6 +578,7 @@ def cmd_run(args) -> int:
                             "listening": True,
                             "elapsed": round(stream_now, 1),
                             "chunks": writer.counter,
+                            "warnings": warnings,
                         }
                     ),
                     encoding="utf-8",
@@ -572,6 +612,7 @@ def cmd_run(args) -> int:
                 "listening": False,
                 "elapsed": round(time.monotonic() - session_t0, 1),
                 "chunks": writer.counter,
+                "warnings": warnings,
                 "transcript": str(writer.transcript),
             }
         ),
