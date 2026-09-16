@@ -165,7 +165,7 @@ def start_mic_capture(channel: Channel, session_t0: float, stop_event: threading
     return stream
 
 
-def macos_helper_binary(compile_if_missing: bool = True) -> Path:
+def macos_helper_binary() -> Path:
     """Compile the Core Audio tap helper on first use; cache by source hash."""
     source = Path(__file__).resolve().parent / "macos" / "SystemAudioCapture.swift"
     digest = hashlib.sha256(source.read_bytes()).hexdigest()[:12]
@@ -173,8 +173,6 @@ def macos_helper_binary(compile_if_missing: bool = True) -> Path:
     binary = cache_dir / f"system-audio-capture-{digest}"
     if binary.exists():
         return binary
-    if not compile_if_missing:
-        raise FileNotFoundError("helper not compiled yet")
     if not shutil.which("swiftc"):
         fail(
             "swiftc not found. Install the Xcode Command Line Tools:\n"
@@ -419,39 +417,45 @@ def play_test_tone() -> bool:
     import tempfile
     import wave
 
-    path = Path(tempfile.gettempdir()) / "winnow-selftest-tone.wav"
-    rate = 44_100
-    length = int(rate * 1.5)
-    with wave.open(str(path), "wb") as fh:
-        fh.setnchannels(1)
-        fh.setsampwidth(2)
-        fh.setframerate(rate)
-        frames = bytearray()
-        for i in range(length):
-            envelope = min(1.0, i / 2000, (length - i) / 2000)  # no clicks
-            value = int(12_000 * envelope * math.sin(2 * math.pi * 440 * i / rate))
-            frames += struct.pack("<h", value)
-        fh.writeframes(bytes(frames))
+    fd, tone_path = tempfile.mkstemp(prefix="winnow-selftest-", suffix=".wav")
+    try:
+        rate = 44_100
+        length = int(rate * 1.5)
+        with os.fdopen(fd, "wb") as raw, wave.open(raw, "wb") as fh:
+            fh.setnchannels(1)
+            fh.setsampwidth(2)
+            fh.setframerate(rate)
+            frames = bytearray()
+            for i in range(length):
+                envelope = min(1.0, i / 2000, (length - i) / 2000)  # no clicks
+                value = int(12_000 * envelope * math.sin(2 * math.pi * 440 * i / rate))
+                frames += struct.pack("<h", value)
+            fh.writeframes(bytes(frames))
 
-    if sys.platform == "darwin":
-        commands = [["afplay", str(path)]]
-    elif sys.platform == "win32":
-        commands = [
-            [
-                "powershell", "-NoProfile", "-Command",
-                f"(New-Object Media.SoundPlayer '{path}').PlaySync()",
+        if sys.platform == "darwin":
+            commands = [["afplay", tone_path]]
+        elif sys.platform == "win32":
+            commands = [
+                [
+                    "powershell", "-NoProfile", "-Command",
+                    f"(New-Object Media.SoundPlayer '{tone_path}').PlaySync()",
+                ]
             ]
-        ]
-    else:
-        commands = [
-            ["pw-play", str(path)],
-            ["paplay", str(path)],
-            ["aplay", "-q", str(path)],
-        ]
-    for command in commands:
-        if shutil.which(command[0]):
-            return subprocess.run(command, capture_output=True).returncode == 0
-    return False
+        else:
+            commands = [
+                ["pw-play", tone_path],
+                ["paplay", tone_path],
+                ["aplay", "-q", tone_path],
+            ]
+        for command in commands:
+            if shutil.which(command[0]):
+                return subprocess.run(command, capture_output=True).returncode == 0
+        return False
+    finally:
+        try:
+            os.unlink(tone_path)
+        except OSError:
+            pass
 
 
 def cmd_selftest(args) -> int:
@@ -607,6 +611,7 @@ def cmd_run(args) -> int:
 
     work: "queue.Queue" = queue.Queue()
     results: "queue.Queue" = queue.Queue()
+    transcription_failures: list[str] = []
 
     def transcription_worker():
         while True:
@@ -615,7 +620,14 @@ def cmd_run(args) -> int:
                 results.put(None)
                 return
             channel, utterance = item
-            text = transcriber.transcribe_array(utterance.audio)
+            try:
+                text = transcriber.transcribe_array(utterance.audio)
+            except Exception as exc:
+                # One bad utterance must not kill the worker: the session would
+                # look alive while producing no further transcript.
+                transcription_failures.append(str(exc))
+                print(f"warning: transcription failed: {exc}", file=sys.stderr)
+                continue
             if text:
                 offset = channel.started_at or 0.0
                 results.put(
@@ -678,7 +690,12 @@ def cmd_run(args) -> int:
                             file=sys.stderr,
                         )
                     warning_state[channel.label] = warning
-                warnings = [w for w in warning_state.values() if w]
+            warnings = [w for w in warning_state.values() if w]
+            if transcription_failures:
+                warnings.append(
+                    f"transcription failed {len(transcription_failures)} time(s); "
+                    f"last error: {transcription_failures[-1]}"
+                )
             if drained or stream_now - last_status >= 5.0:
                 last_status = stream_now
                 status_path.write_text(
