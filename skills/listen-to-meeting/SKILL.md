@@ -53,7 +53,7 @@ Treat any clear plain-language statement to that effect as the stop signal.
 
 Discover the host project's AI context the same way process-requirements does — `AGENTS.md`, `CLAUDE.md`, `README.md`, `docs/`, or whatever the repo's conventions point to. Winnow has no context of its own; the project's recorded decisions, constraints and domain facts are one of the two baselines you check statements against. If no AI context exists, tell the user context-mismatch checking is unavailable and continue with in-meeting consistency checking only.
 
-Create `<session-dir>/meeting-state.md` to hold the second baseline: a running model of what has been asserted **in this meeting** — one line per assertion, with channel, timestamp, and a status of `live` or `corrected` — plus the *candidate gaps* you are watching (status `watching`, `surfaced`, or `filled`). Also track the number of the last chunk you processed there. Keep this file updated as you go: it is what lets you resume cleanly if your conversation context gets compacted mid-meeting.
+Create `<session-dir>/meeting-state.md` to hold the second baseline: a running model of what has been asserted **in this meeting** — one line per assertion, with channel, timestamp, and a status of `live` or `corrected` — plus the *candidate gaps* you are watching (status `watching`, `surfaced`, or `filled`). Also track two things there: the number of the last chunk you processed, and the meeting-clock time at which you last said anything to the user. Keep this file updated as you go: it is what lets you resume cleanly if your conversation context gets compacted mid-meeting.
 
 ## Step 4 — The listening loop
 
@@ -93,6 +93,16 @@ Surface a flag **only** if at least one of these holds:
 Never flag: rephrasings or elaborations; refinements that narrow an earlier statement without reversing it; hedged exploration ("what if...", "maybe we could...") unless it gets adopted as a decision; small talk and logistics; figures differing only in precision ("about a hundred" vs "103"). And for gaps specifically: terms or references the participants visibly share even though the recorded context doesn't — the room's common knowledge is a context-update candidate for after the meeting, not a live question — and gaps nothing in the meeting depends on resolving now, which process-requirements will catch on the full transcript anyway. A live gap flag is only worth its interruption when asking in the room beats asking afterwards.
 
 When you are unsure whether the room noticed a contradiction, hold the flag for one more chunk and raise it only if it is still unresolved then. Gaps get a longer leash: meetings routinely clarify themselves, so hold a candidate gap for at least two further chunks (or until the topic visibly moves on) and surface it only if it is still open and the discussion has kept building on the unstated assumption — dropping it silently the moment the meeting fills it. Bias firmly toward silence: a flag must be rare enough that every one gets read. A chatty flagger gets ignored, and then it catches nothing.
+
+### Staying quiet between flags
+
+Silence is the correct output for an ordinary chunk, and ordinary is what almost every chunk is. Between the Step 2 confirmation and the first thing that passes the flagging threshold, say **nothing**. In particular, never narrate the listening itself: no "Listening.", no "Still listening — nothing to flag yet", no summarising what the room has moved on to. The user can hear their own meeting; a running commentary on it is pure noise, and it trains them to skim past your messages exactly when a real flag needs reading.
+
+The one exception is proof of life. If nothing at all has gone to the user for **about ten minutes** — no flag, no question, no answer of any kind — send one short line so they know you are still up. Anything you send resets that clock, so an active meeting full of flags never produces one. Record the time in `meeting-state.md` whenever you send anything, and check it against the meeting clock rather than your sense of elapsed turns, which compaction destroys.
+
+Keep it to a single line, and prefer saying something concrete about the state of the session over a bare ping:
+
+> Still listening — 34 chunks in, nothing worth flagging so far.
 
 ### Flag format
 
