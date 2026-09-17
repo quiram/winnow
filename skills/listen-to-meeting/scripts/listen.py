@@ -25,6 +25,11 @@ Commands:
   run       capture until stopped: --session-dir receives chunk-NNNN.txt files,
             a running transcript.md, and status.json. Stop by creating a file
             named `stop` in the session dir (or SIGTERM/SIGINT).
+  wait      block until chunks past --after appear, the capture stops, or
+            --timeout elapses; print the new chunk paths. This is how the
+            listening agent waits, deliberately in place of a push-notification
+            watcher: every push event is a message in the user's chat, and at a
+            chunk every few seconds that buries the meeting in notifications.
 
 Layering: all audio-level segmentation — voice-activity detection and
 utterance finalization — belongs to transcribe-audio's StreamSegmenter; this
@@ -65,6 +70,8 @@ TURN_GAP = 2.0  # a pause this long counts as a turn boundary
 IDLE_FLUSH = 3.0  # flush pending segments after this much silence
 IDLE_FLUSH_ANY = 10.0  # after this long a lull, flush even a below-minimum batch
 SILENCE_CHECK_AFTER = 15.0  # grace period before warning about a signal-less channel
+WAIT_POLL = 0.2  # how often `wait` looks for new chunks
+WAIT_TIMEOUT = 10.0  # ceiling on a single `wait`; also the stop-signal lag
 MIC_LABEL = "Me"
 SYSTEM_LABEL = "Others"
 
@@ -583,6 +590,65 @@ class ChunkWriter:
         self.pending = []
 
 
+def chunk_index(path: Path) -> "int | None":
+    _, _, digits = path.stem.partition("-")
+    return int(digits) if digits.isdigit() else None
+
+
+def capture_running(status_path: Path) -> bool:
+    try:
+        status = json.loads(status_path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        # No readable status yet means `run` is still loading the model, so a
+        # wait issued right after launch must keep waiting rather than return.
+        return True
+    return bool(status.get("listening", True))
+
+
+def cmd_wait(args) -> int:
+    """Block until there is something new to process, then return promptly.
+
+    Returns on the first of: a chunk past --after, the capture no longer
+    running, or the timeout. The timeout is a ceiling, not a delay — during an
+    active meeting a chunk lands every few seconds and ends the wait long
+    before it. It exists so the agent resurfaces during silence, since a
+    blocked agent is not reading the user's messages: the stop signal for this
+    skill is the user saying so in plain language, and it cannot be seen until
+    this call returns. Keep it short for that reason alone.
+
+    stdout carries only the new chunk paths; the outcome goes to stderr.
+    """
+    session_dir = Path(args.session_dir).resolve()
+    chunk_dir = session_dir / "chunks"
+    status_path = session_dir / "status.json"
+    deadline = time.monotonic() + args.timeout
+
+    while True:
+        new = []
+        if chunk_dir.is_dir():
+            for path in sorted(chunk_dir.glob("chunk-*.txt")):
+                index = chunk_index(path)
+                if index is not None and index > args.after:
+                    new.append((index, path))
+        if new:
+            new.sort()
+            for _, path in new:
+                print(path)
+            print(f"new: {len(new)} chunk(s)", file=sys.stderr)
+            return 0
+
+        # `run` writes its final chunks before flipping status to listening:
+        # false, so checking this after the scan above can never skip a chunk.
+        if not capture_running(status_path):
+            print("stopped: capture is no longer running", file=sys.stderr)
+            return 0
+
+        if time.monotonic() >= deadline:
+            print("timeout: no new chunks", file=sys.stderr)
+            return 0
+        time.sleep(WAIT_POLL)
+
+
 def cmd_run(args) -> int:
     from transcribe import StreamSegmenter, Transcriber
 
@@ -774,6 +840,15 @@ def main() -> int:
     p_run = sub.add_parser("run", parents=[common], help="capture until stopped")
     p_run.add_argument("--session-dir", required=True, help="directory for chunks, transcript and status")
     p_run.set_defaults(func=cmd_run)
+
+    p_wait = sub.add_parser("wait", help="block until new chunks appear (the listening loop's wait)")
+    p_wait.add_argument("--session-dir", required=True, help="the running session's directory")
+    p_wait.add_argument("--after", type=int, default=0, help="highest chunk number already processed")
+    p_wait.add_argument(
+        "--timeout", type=float, default=WAIT_TIMEOUT,
+        help=f"return after this many seconds even with nothing new (default: {WAIT_TIMEOUT:g})",
+    )
+    p_wait.set_defaults(func=cmd_wait)
 
     args = parser.parse_args()
     return args.func(args)

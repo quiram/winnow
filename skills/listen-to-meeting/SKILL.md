@@ -57,7 +57,17 @@ Create `<session-dir>/meeting-state.md` to hold the second baseline: a running m
 
 ## Step 4 — The listening loop
 
-Wait for new chunk files, using whatever mechanism your harness provides — a file-watch or monitor tool, a blocking wait command, or periodic checks; never a busy-loop of instant re-checks. Process chunks strictly in order. For each new chunk:
+Wait for new chunk files with the tool's own blocking wait, run in the foreground, where `<n>` is the last chunk number you recorded as processed:
+
+```bash
+uv run <this-skill-dir>/scripts/listen.py wait --session-dir <session-dir> --after <n>
+```
+
+It prints the paths of any chunks past `<n>` and returns the moment one exists — or after 10 seconds if the room is silent, or immediately once the capture stops. Then process what it printed and call it again.
+
+**Do not use a file-watch, monitor, or notification tool for this, however well suited it looks.** Those deliver one notification per event, every one of which is a visible message in the user's chat; at a chunk every few seconds, a meeting's worth of them buries the conversation you are supposed to be quietly listening to. A foreground wait is silent. The cost is that while it is blocked you are not reading the user's messages — including the stop signal — which is why the 10-second ceiling exists and why it should stay short. During an active meeting chunks arrive well inside it, so it only applies during genuine silence.
+
+Process chunks strictly in order. For each new chunk:
 
 1. **Update the meeting state.** Extract assertions — decisions, constraints, facts, commitments — and add them to `meeting-state.md`. Rephrasing of an existing assertion updates nothing.
 2. **Distinguish correction from conflict** when a statement clashes with an earlier one:
