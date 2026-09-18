@@ -2,6 +2,8 @@
 # /// script
 # requires-python = ">=3.10"
 # dependencies = [
+#     # listen-to-meeting's listen.py imports this module, so it declares these
+#     # same two pins in its own header. Keep the two blocks in step.
 #     "faster-whisper>=1.1,<2",
 #     "numpy>=1.24",
 # ]
@@ -19,9 +21,13 @@ Modes:
             weights are already cached
   prefetch  download/load the model now (so a later run starts instantly)
 
-Importable API: other scripts reuse `Transcriber` (thread-safe, one shared
-model) and `StreamSegmenter` (per-channel VAD segmentation) to run several
-audio channels through a single model instance.
+Importable API — a supported contract, not an internal detail. `Transcriber`
+(thread-safe, one shared model) and `StreamSegmenter` (per-channel VAD
+segmentation) let another script run several audio channels through a single
+model instance. listen-to-meeting's listen.py imports both, and depends on
+them by name: treat a change to either signature as a breaking change to that
+skill, not a local refactor. `model_is_cached` is part of the same contract —
+its `check` command calls it. See CONTRIBUTING.md.
 """
 
 from __future__ import annotations
