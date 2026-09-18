@@ -2,6 +2,8 @@
 # /// script
 # requires-python = ">=3.10"
 # dependencies = [
+#     # The first two belong to transcribe-audio's transcribe.py, which this
+#     # script imports; they are mirrored from its header. Keep them in step.
 #     "faster-whisper>=1.1,<2",
 #     "numpy>=1.24",
 #     "sounddevice>=0.4.6",
