@@ -26,6 +26,10 @@ Commands:
             a running transcript.md, and status.json. Stop by creating a file
             named `stop` in the session dir (or SIGTERM/SIGINT).
 
+Alongside this script:
+  wait.py     wait for new chunks to appear in a running session
+  session.py  the session directory layout, used by both
+
 Layering: all audio-level segmentation — voice-activity detection and
 utterance finalization — belongs to transcribe-audio's StreamSegmenter; this
 script feeds it raw PCM continuously and decides nothing about audio
@@ -52,6 +56,8 @@ import sys
 import threading
 import time
 from pathlib import Path
+
+import session
 
 # The transcription engine lives in the transcribe-audio skill; both skills
 # ship in the same package, so it is reachable relative to this file.
@@ -530,9 +536,9 @@ class ChunkWriter:
     """Batches finalized segments into chunk files per the chunking policy."""
 
     def __init__(self, session_dir: Path):
-        self.chunk_dir = session_dir / "chunks"
+        self.chunk_dir = session.chunk_dir(session_dir)
         self.chunk_dir.mkdir(parents=True, exist_ok=True)
-        self.transcript = session_dir / "transcript.md"
+        self.transcript = session.transcript_path(session_dir)
         self.transcript.write_text("# Meeting transcript\n\n", encoding="utf-8")
         self.pending: list[dict] = []
         self.counter = 0
@@ -573,7 +579,7 @@ class ChunkWriter:
                 f"[{format_clock(seg['start'])}] {seg['label']}: {seg['text']}"
             )
         body = "\n".join(lines) + "\n"
-        final = self.chunk_dir / f"chunk-{self.counter:04d}.txt"
+        final = self.chunk_dir / session.chunk_name(self.counter)
         tmp = final.with_suffix(".tmp")
         tmp.write_text(body, encoding="utf-8")
         os.replace(tmp, final)  # atomic: the polling agent never sees partials
@@ -590,7 +596,7 @@ def cmd_run(args) -> int:
 
     session_dir = Path(args.session_dir).resolve()
     session_dir.mkdir(parents=True, exist_ok=True)
-    stop_file = session_dir / "stop"
+    stop_file = session.stop_path(session_dir)
     if stop_file.exists():
         stop_file.unlink()
 
@@ -642,7 +648,7 @@ def cmd_run(args) -> int:
     threading.Thread(target=transcription_worker, daemon=True).start()
 
     writer = ChunkWriter(session_dir)
-    status_path = session_dir / "status.json"
+    status_path = session.status_path(session_dir)
 
     import signal
 
