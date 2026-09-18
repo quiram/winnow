@@ -19,9 +19,55 @@ skills/
   listen-to-meeting/
     SKILL.md
     scripts/listen.py                     # two-channel live capture -> chunked transcript files
+    scripts/wait.py                       # blocking wait for the next chunk in a running session
+    scripts/session.py                    # session directory layout, shared by listen.py and wait.py
     scripts/macos/SystemAudioCapture.swift # Core Audio system-audio tap helper, compiled on first run
   setup-audio/SKILL.md                    # guided one-time preparation; drives the other skills' tooling
 ```
+
+## The cross-skill engine dependency
+
+`listen-to-meeting/scripts/listen.py` imports `Transcriber`, `StreamSegmenter`
+and `model_is_cached` from `transcribe-audio/scripts/transcribe.py` — across a
+skill boundary, by relative path. This looks unclean and is worth understanding
+before anyone "fixes" it.
+
+It is deliberate, for two reasons:
+
+1. **The engine belongs to transcribe-audio.** listen-to-meeting captures audio
+   and batches text; all audio-level work — VAD, utterance finalization,
+   transcription — is transcribe-audio's job. Duplicating the engine would fork
+   it; importing it keeps one implementation.
+2. **There is nowhere else to put it.** APM's unit of distribution is the
+   primitive. A package-level shared directory does not survive `apm pack`:
+   under `includes: auto` a root `lib/`, `scripts/` or `common/` is silently
+   dropped from the bundle, and naming one in an explicit `includes:` list fails
+   outright with `Explicit include path is not a packable primitive`. That holds
+   even for `scripts/`, which APM's own package-anatomy docs list as an authored
+   directory. Claude Code *does* offer `${CLAUDE_PLUGIN_ROOT}` for exactly this,
+   but winnow ships through both ecosystems and stays assistant-neutral, so a
+   Claude-only mechanism is not available to us.
+
+So the engine lives in the skill that owns it, and the other skill reaches for
+it. Winnow already works this way one layer up: `setup-audio/SKILL.md` drives
+`<listen-to-meeting-skill-dir>/scripts/listen.py`.
+
+What this costs, and how it is contained:
+
+- **The two skills must ship and install together.** `listen.py` resolves the
+  engine through `load_engine()`, which fails with an actionable message — not a
+  bare `ImportError` — when it is absent, unimportable, or too old to carry the
+  API.
+- **The imported names are a contract.** Changing the signature of `Transcriber`
+  or `StreamSegmenter` is a breaking change to listen-to-meeting, not a local
+  refactor. `transcribe.py`'s docstring says so.
+- **The shared dependency pins are duplicated.** `faster-whisper` and `numpy`
+  appear in both PEP 723 headers and are kept in step by hand; both blocks carry
+  a comment saying so. Nothing enforces it.
+
+If the engine ever gains a third consumer, revisit this: extracting it to a
+published Python package, declared as a normal dependency in each script's PEP
+723 header, is the clean answer that APM's model actually supports.
 
 ## Releasing
 
