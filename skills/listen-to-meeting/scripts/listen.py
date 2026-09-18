@@ -59,10 +59,54 @@ from pathlib import Path
 
 import session
 
-# The transcription engine lives in the transcribe-audio skill; both skills
-# ship in the same package, so it is reachable relative to this file.
-TRANSCRIBE_SCRIPTS = Path(__file__).resolve().parents[2] / "transcribe-audio" / "scripts"
-sys.path.insert(0, str(TRANSCRIBE_SCRIPTS))
+# The transcription engine lives in the transcribe-audio skill, not here: it is
+# that skill's tool, and this one reuses it so both channels share a single
+# Whisper model. The sibling-skill import is deliberate — APM has no
+# package-level location for shared code (`apm pack` ships primitives only, and
+# rejects anything else), so the owning skill hosting the engine is the only
+# structure the packaging model allows. Both skills ship in the same package, so
+# the relative path is stable. See CONTRIBUTING.md for the contract.
+TRANSCRIBE_SKILL = Path(__file__).resolve().parents[2] / "transcribe-audio"
+TRANSCRIBE_SCRIPTS = TRANSCRIBE_SKILL / "scripts"
+TRANSCRIBE_MODULE = TRANSCRIBE_SCRIPTS / "transcribe.py"
+
+
+class EngineUnavailable(RuntimeError):
+    """The transcribe-audio engine could not be loaded."""
+
+
+def load_engine():
+    """Import transcribe-audio's engine module, or fail with a usable message.
+
+    A bare ImportError here reads as a Python problem; it is almost always a
+    packaging one — the two skills got separated, or were installed apart.
+    """
+    if not TRANSCRIBE_MODULE.exists():
+        raise EngineUnavailable(
+            f"the transcribe-audio skill is missing: expected its engine at "
+            f"{TRANSCRIBE_MODULE}.\nlisten-to-meeting reuses that skill's "
+            f"Transcriber and StreamSegmenter, so the two ship together in the "
+            f"winnow package and must stay side by side. Reinstall the package "
+            f"rather than copying this skill's directory on its own."
+        )
+    if str(TRANSCRIBE_SCRIPTS) not in sys.path:
+        sys.path.insert(0, str(TRANSCRIBE_SCRIPTS))
+    try:
+        import transcribe
+    except Exception as exc:  # noqa: BLE001 — surfaced verbatim below
+        raise EngineUnavailable(
+            f"the transcribe-audio engine at {TRANSCRIBE_MODULE} could not be "
+            f"imported: {exc}\nIts dependencies are declared in this script's "
+            f"own PEP 723 header too; run it with `uv run` so they are present."
+        ) from exc
+    for name in ("Transcriber", "StreamSegmenter"):
+        if not hasattr(transcribe, name):
+            raise EngineUnavailable(
+                f"the transcribe-audio engine at {TRANSCRIBE_MODULE} has no "
+                f"{name}. listen-to-meeting depends on that API; the two skills "
+                f"are likely from different winnow versions."
+            )
+    return transcribe
 
 CAPTURE_RATE = 48_000  # capture rate; decimated 3:1 to Whisper's 16 kHz
 MIN_CHUNK = 5.0
@@ -334,7 +378,7 @@ def cmd_check(args) -> int:
             )
 
     try:
-        import transcribe
+        transcribe = load_engine()
 
         report("transcription engine (transcribe-audio skill)", True)
         cached = transcribe.model_is_cached(args.model)
@@ -513,7 +557,7 @@ def cmd_selftest(args) -> int:
 
 
 def cmd_prefetch(args) -> int:
-    from transcribe import Transcriber
+    Transcriber = load_engine().Transcriber
 
     print(f"loading model '{args.model}' (downloads on first use)...", file=sys.stderr)
     Transcriber(args.model)
@@ -590,7 +634,8 @@ class ChunkWriter:
 
 
 def cmd_run(args) -> int:
-    from transcribe import StreamSegmenter, Transcriber
+    engine = load_engine()
+    Transcriber, StreamSegmenter = engine.Transcriber, engine.StreamSegmenter
 
     import numpy as np
 
@@ -782,7 +827,12 @@ def main() -> int:
     p_run.set_defaults(func=cmd_run)
 
     args = parser.parse_args()
-    return args.func(args)
+    try:
+        return args.func(args)
+    except EngineUnavailable as exc:
+        # `check` reports this inline; everywhere else it is fatal, and a
+        # traceback would bury a message that already says what to do.
+        fail(str(exc))
 
 
 if __name__ == "__main__":
