@@ -60,12 +60,12 @@ Create `<session-dir>/meeting-state.md` to hold the second baseline: a running m
 Wait for new chunk files with the tool's own blocking wait, run in the foreground, where `<n>` is the last chunk number you recorded as processed:
 
 ```bash
-uv run <this-skill-dir>/scripts/listen.py wait --session-dir <session-dir> --after <n>
+uv run <this-skill-dir>/scripts/wait.py --session-dir <session-dir> --after <n>
 ```
 
 It prints the paths of any chunks past `<n>` and returns the moment one exists — or after 10 seconds if the room is silent, or immediately once the capture stops. Then process what it printed and call it again.
 
-**Do not use a file-watch, monitor, or notification tool for this, however well suited it looks.** Those deliver one notification per event, every one of which is a visible message in the user's chat; at a chunk every few seconds, a meeting's worth of them buries the conversation you are supposed to be quietly listening to. A foreground wait is silent. The cost is that while it is blocked you are not reading the user's messages — including the stop signal — which is why the 10-second ceiling exists and why it should stay short. During an active meeting chunks arrive well inside it, so it only applies during genuine silence.
+**Do not use a file-watch, monitor, or notification tool instead.** Every event they deliver is a visible message in the user's chat, and chunks arrive every few seconds; a foreground wait is silent. Nor should you raise the timeout: you cannot see the user's stop signal while blocked on it.
 
 Process chunks strictly in order. For each new chunk:
 
