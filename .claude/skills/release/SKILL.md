@@ -1,15 +1,19 @@
 ---
 name: release
 description: >-
-  Release a new version of winnow: bump the version everywhere it lives,
-  validate the marketplace, regenerate the packed manifests, then commit, tag
-  and push. Local to this repo — not part of the winnow package. Use when asked
-  to release, cut, or publish a new version of winnow.
+  Release a new version of winnow: work out the next version from what has
+  changed since the last release, bump it everywhere it lives, validate the
+  marketplace, regenerate the packed manifests, then commit, tag and push.
+  Local to this repo — not part of the winnow package. Use when asked to
+  release, cut, or publish a new version of winnow.
 ---
 
 # Release winnow
 
-Cut a release of this repo. The version follows semver; if the user hasn't said which version to release, ask — never pick one for them.
+Cut a release of this repo. The version follows semver, and it is read off the
+changes rather than chosen: step 2 works out which bump the changes since the
+last release earn and puts it to the user with the reasoning. The user decides
+— if they name a version, that is the version.
 
 ## Steps
 
