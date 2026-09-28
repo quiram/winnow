@@ -4,16 +4,6 @@ Orientation for anyone — person or agent — working on winnow itself. It says
 
 To *use* winnow, start at [README.md](README.md). To change its code, read [CONTRIBUTING.md](CONTRIBUTING.md) — it carries the repo layout, the public/private skill split, the cross-skill engine dependency, and the release process.
 
-## Vocabulary
-
-Terms the skills use throughout and define nowhere else:
-
-- **AI context** — a project's durable documentation, the "advanced README" that tells people and agents how to work on it. winnow reads it to ground its judgements and writes approved knowledge back into it.
-- **Doc map** — the rule saying which kind of knowledge belongs in which document. Explicit or implicit in a context's structure; without one, update-context refuses to guess.
-- **Proposal** — the short-lived handoff file between process-requirements and the skills that apply its output. Kept outside the consuming repo and deleted once applied. Plumbing, never a deliverable.
-- **The three buckets** — how process-requirements sorts everything it hears: irrelevant (discarded), durable knowledge (to the AI context), actionable work (to the tracker).
-- **Host repo / consuming repo** — the project winnow runs *against*, as distinct from this one.
-
 ## Where tasks are tracked
 
 GitHub Issues on [quiram/winnow](https://github.com/quiram/winnow/issues), reached with the `gh` CLI.
@@ -27,6 +17,7 @@ Four homes, each with its own audience. New knowledge goes where its audience is
 | Where | What belongs there |
 | --- | --- |
 | `ai-context/objectives.md` | What winnow is for and the properties it is trying to hold. |
+| `ai-context/glossary.md` | Terms the skills use throughout and define nowhere else. |
 | `README.md` | What winnow is, what each public skill does, what a consuming repo must provide, how to install it. The user-facing surface. |
 | `CONTRIBUTING.md` | Everything needed to change winnow's code: layout, architectural decisions and their reasoning, the release process. |
 | `AGENTS.md` (this file) | Orientation, vocabulary, tracker, conventions, and the routing rule itself. It points rather than repeats. |
