@@ -22,7 +22,7 @@ skills/
     scripts/wait.py                       # blocking wait for the next chunk in a running session
     scripts/session.py                    # session directory layout, shared by listen.py and wait.py
     scripts/macos/SystemAudioCapture.swift # Core Audio system-audio tap helper, compiled on first run
-  setup-audio/SKILL.md                    # guided one-time preparation; drives the other skills' tooling
+  winnow-setup-audio/SKILL.md             # guided one-time preparation; drives the other skills' tooling
 ```
 
 ## The cross-skill engine dependency
@@ -49,8 +49,8 @@ It is deliberate, for two reasons:
    Claude-only mechanism is not available to us.
 
 So the engine lives in the skill that owns it, and the other skill reaches for
-it. Winnow already works this way one layer up: `setup-audio/SKILL.md` drives
-`<listen-to-meeting-skill-dir>/scripts/listen.py`.
+it. Winnow already works this way one layer up: `winnow-setup-audio/SKILL.md`
+drives `<listen-to-meeting-skill-dir>/scripts/listen.py`.
 
 What this costs, and how it is contained:
 
