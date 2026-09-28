@@ -1,18 +1,20 @@
 ---
-name: setup-audio
+name: winnow-setup-audio
 description: >-
-  Prepare the machine for winnow's audio skills in one guided pass: verify uv
-  and the Python audio stack, compile the macOS system-audio helper, walk the
-  user through OS permissions, download the local Whisper model, and finish
-  with a live capture self-test. Idempotent and safe to re-run — it changes
-  nothing that is already in place. Use when asked to set up or prepare audio
-  transcription or meeting listening, before a first meeting, or when
-  transcribe-audio or listen-to-meeting report missing prerequisites.
+  The audio part of setup-winnow: prepare the machine for winnow's audio skills
+  in one guided pass — verify uv and the Python audio stack, compile the macOS
+  system-audio helper, walk the user through OS permissions, download the local
+  Whisper model, and finish with a live capture self-test. Idempotent and safe
+  to re-run — it changes nothing that is already in place. Use when setup-winnow
+  delegates the audio stack here, or when transcribe-audio or listen-to-meeting
+  report missing prerequisites. Someone asking to prepare a machine for winnow
+  wants setup-winnow, which covers the audio stack and every other prerequisite
+  the skills have.
 ---
 
-# Set up audio
+# Set up winnow's audio stack
 
-You prepare a machine so that **transcribe-audio** and **listen-to-meeting** just work when they are needed — moving every slow or interactive step (downloads, compilation, permission prompts) to a moment when nothing depends on them, instead of the start of a meeting or the arrival of a voice note. Run to completion whenever invoked: the goal is a machine that passes every check, not a report of what would fail.
+You prepare a machine so that **transcribe-audio** and **listen-to-meeting** just work when they are needed — moving every slow or interactive step (downloads, compilation, permission prompts) to a moment when nothing depends on them, instead of the start of a meeting or the arrival of a voice note. You are the audio part of **setup-winnow**, which checks winnow's other prerequisites and delegates here; the two audio skills also invoke you directly when they find something missing. Run to completion whenever invoked: the goal is a machine that passes every check, not a report of what would fail.
 
 This skill has no tools of its own; it drives the ones shipped with the other audio skills — `listen.py` in listen-to-meeting's scripts directory, whose `check` covers everything transcribe-audio needs too. Nothing here duplicates their logic, and nothing here touches the host project: everything lands in per-user caches (uv environments, the Hugging Face model cache, the compiled helper in `~/.cache/winnow`), shared by every project on the machine.
 
@@ -62,4 +64,6 @@ It captures both channels for a few seconds, plays the tone, and reports per cha
 
 ## Step 6 — Report
 
-Tell the user the state the machine ended in: what was already in place, what this run installed, downloaded, or got granted, and that transcribe-audio (voice notes, recordings — including as input to process-requirements) and listen-to-meeting (live meetings) are now ready. If something could not be completed, say exactly what remains and whose action it needs.
+Tell the user the state the audio stack ended in: what was already in place, what this run installed, downloaded, or got granted, and whether transcribe-audio (voice notes, recordings — including as input to process-requirements) and listen-to-meeting (live meetings) can now run. If something could not be completed, say exactly what remains and whose action it needs.
+
+Report on the audio stack only. When setup-winnow delegated to you, it owns the overall verdict — the project-side prerequisites are not yours to check, so never tell the user that winnow as a whole is ready.

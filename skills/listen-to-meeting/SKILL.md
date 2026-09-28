@@ -27,9 +27,9 @@ Before anything else, run the readiness check from this skill's directory:
 uv run <this-skill-dir>/scripts/listen.py check
 ```
 
-If it ends with `ready: yes`, continue — though if it notes the Whisper model isn't cached yet, prefer getting that download done (via **setup-audio** or `listen.py prefetch`) before the meeting starts, not during it.
+If it ends with `ready: yes`, continue — though if it notes the Whisper model isn't cached yet, prefer getting that download done (via **winnow-setup-audio** or `listen.py prefetch`) before the meeting starts, not during it.
 
-Anything else — including `uv` itself being missing, so the check can't even run — is a setup problem, and setup is not this skill's job: invoke the **setup-audio** skill, which owns all installation, permission, and download guidance, and **do not start listening until it reports the machine ready. Never start a partial session** (e.g. mic-only).
+Anything else — including `uv` itself being missing, so the check can't even run — is a setup problem, and setup is not this skill's job: invoke the **winnow-setup-audio** skill, which owns all installation, permission, and download guidance, and **do not start listening until it reports the machine ready. Never start a partial session** (e.g. mic-only).
 
 ## Step 2 — Start listening, and say how to stop
 
