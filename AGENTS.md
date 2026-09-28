@@ -4,12 +4,6 @@ Orientation for anyone — person or agent — working on winnow itself. It says
 
 To *use* winnow, start at [README.md](README.md). To change its code, read [CONTRIBUTING.md](CONTRIBUTING.md) — it carries the repo layout, the public/private skill split, the cross-skill engine dependency, and the release process.
 
-## Where tasks are tracked
-
-GitHub Issues on [quiram/winnow](https://github.com/quiram/winnow/issues), reached with the `gh` CLI.
-
-No ticket conventions are recorded, so create-tasks' defaults apply: business goal first, dedupe against existing tickets, one goal per ticket, independent tickets wherever possible.
-
 ## The doc map
 
 Four homes, each with its own audience. New knowledge goes where its audience is:
@@ -18,6 +12,7 @@ Four homes, each with its own audience. New knowledge goes where its audience is
 | --- | --- |
 | `ai-context/objectives.md` | What winnow is for and the properties it is trying to hold. |
 | `ai-context/glossary.md` | Terms the skills use throughout and define nowhere else. |
+| `ai-context/task-tracking.md` | Which tracker holds work on winnow, how to reach it, and any ticket conventions. |
 | `README.md` | What winnow is, what each public skill does, what a consuming repo must provide, how to install it. The user-facing surface. |
 | `CONTRIBUTING.md` | Everything needed to change winnow's code: layout, architectural decisions and their reasoning, the release process. |
 | `AGENTS.md` (this file) | Orientation, vocabulary, tracker, conventions, and the routing rule itself. It points rather than repeats. |
