@@ -4,12 +4,6 @@ Orientation for anyone — person or agent — working on winnow itself. It says
 
 To *use* winnow, start at [README.md](README.md). To change its code, read [CONTRIBUTING.md](CONTRIBUTING.md) — it carries the repo layout, the public/private skill split, the cross-skill engine dependency, and the release process.
 
-## What winnow is
-
-A set of agent skills that turn conversations, meeting transcripts and voice notes into two durable outputs: knowledge filed into a project's AI context, and well-formed tickets in its task tracker. Nothing permanent changes until the user has agreed it in conversation.
-
-The package is agent-agnostic. It ships through [APM](https://microsoft.github.io/apm/), and this repo is both the package and the marketplace that serves it.
-
 ## Vocabulary
 
 Terms the skills use throughout and define nowhere else:
@@ -32,6 +26,7 @@ Four homes, each with its own audience. New knowledge goes where its audience is
 
 | Where | What belongs there |
 | --- | --- |
+| `ai-context/objectives.md` | What winnow is for and the properties it is trying to hold. |
 | `README.md` | What winnow is, what each public skill does, what a consuming repo must provide, how to install it. The user-facing surface. |
 | `CONTRIBUTING.md` | Everything needed to change winnow's code: layout, architectural decisions and their reasoning, the release process. |
 | `AGENTS.md` (this file) | Orientation, vocabulary, tracker, conventions, and the routing rule itself. It points rather than repeats. |
