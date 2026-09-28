@@ -30,7 +30,7 @@ skills/
 
 ## Public and private skills
 
-Winnow ships nine skills, and only six of them are meant to be called by name:
+Winnow ships nine skills, but only six of them are meant to be called by name:
 
 - **Public** — `process-requirements`, `update-context`, `create-tasks`,
   `transcribe-audio`, `listen-to-meeting`, `setup-winnow`. These are what the
