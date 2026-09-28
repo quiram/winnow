@@ -34,7 +34,9 @@ flowchart LR
 
 ### winnow
 
-Works conversationally, whether the input is a live brainstorm or one or more meeting transcripts worked through with the user — inline, as files, as links (provided a tool with access exists), or as audio recordings, which it hands to transcribe-audio behind the scenes. It triages everything into three buckets:
+Shares its name with the package, because it is the pipeline's entry point: it invokes whatever else a run needs, so this is the only skill name you have to remember to get from a conversation to recorded knowledge and raised tickets.
+
+It works conversationally, whether the input is a live brainstorm or one or more meeting transcripts worked through with the user — inline, as files, as links (provided a tool with access exists), or as audio recordings, which it hands to transcribe-audio behind the scenes. It triages everything into three buckets:
 
 - **irrelevant** — discarded; the skill lists what it dropped when presenting its findings, and keeps no record beyond that;
 - **durable knowledge** — things anyone working on the project later would need, destined for the AI context;
