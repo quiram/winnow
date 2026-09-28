@@ -39,6 +39,7 @@ marketplace:
         (turn approved work items into tracker tickets), transcribe-audio
         (local Whisper transcription of files and live streams),
         listen-to-meeting (flag contradictions and gaps live during a meeting) and
-        winnow-setup-audio (guided one-time preparation of the audio stack).
+        setup-winnow (one guided pass that prepares the machine and the
+        project for all of them).
       source: ./
       version: 0.8.0

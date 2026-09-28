@@ -22,8 +22,41 @@ skills/
     scripts/wait.py                       # blocking wait for the next chunk in a running session
     scripts/session.py                    # session directory layout, shared by listen.py and wait.py
     scripts/macos/SystemAudioCapture.swift # Core Audio system-audio tap helper, compiled on first run
-  winnow-setup-audio/SKILL.md             # guided one-time preparation; drives the other skills' tooling
+  setup-winnow/SKILL.md                   # public: checks every prerequisite, delegates each fix
+  winnow-setup-context/SKILL.md           # private part: AI context + doc map
+  winnow-setup-tracker/SKILL.md           # private part: tracker identity + reachable tooling
+  winnow-setup-audio/SKILL.md             # private part: audio stack; drives the other skills' tooling
 ```
+
+## Public and private skills
+
+Winnow ships nine skills, and only six of them are meant to be called by name:
+
+- **Public** — `process-requirements`, `update-context`, `create-tasks`,
+  `transcribe-audio`, `listen-to-meeting`, `setup-winnow`. These are what the
+  README documents.
+- **Private** — `winnow-setup-context`, `winnow-setup-tracker`,
+  `winnow-setup-audio`. Parts of `setup-winnow`, documented here and nowhere
+  else.
+
+Nothing enforces the split; a skill is a skill. What keeps it honest is the
+`description`, which is what an agent matches against: each private part's
+description names the skills that delegate to it, and points anyone asking to
+"set up winnow" at `setup-winnow`. The README doesn't name them, and neither does the package
+description in `apm.yml`, because both document how to use winnow rather than
+how it works.
+
+The parts exist because each prerequisite has two callers, not one.
+`setup-winnow` settles everything up front — but users skip setup, so
+`update-context` needs the same doc-map fix path when it finds no map, and
+`create-tasks` the same tracker discovery when it finds no tracker. One skill
+each, reached from both sides, keeps those rules in a single place.
+
+That delegation is a name lookup, unlike the relative-path import described
+below, and it fails softly: an agent that cannot find the part says so. Each
+delegation point still states the outcome it needs in a sentence, so a skill
+that cannot reach its part halts on a precise gap instead of improvising a
+documentation structure or a tracker.
 
 ## The cross-skill engine dependency
 
