@@ -41,7 +41,9 @@ A doc map need not be a dedicated meta-document. It may be explicit meta-documen
 
 Explain what is missing and why it costs the user something: the AI context exists so that *people and AI alike know how to work on this project after reading it*, and without it every later judgement about relevance and placement is a guess.
 
-Propose the minimum entry point at the repo root — `AGENTS.md` or `CLAUDE.md`, or `README.md` where the project would rather keep one file — covering the project's purpose and objectives, its domain vocabulary, its tech stack and key architectural decisions, where tasks are tracked, and any conventions that already exist in practice.
+Propose the minimum entry point at the repo root: `AGENTS.md`, or `README.md` where the project would rather keep one file. It covers the project's purpose and objectives, its domain vocabulary, its tech stack and key architectural decisions, where tasks are tracked, and any conventions that already exist in practice.
+
+Propose `AGENTS.md` rather than an assistant-specific file such as `CLAUDE.md`, even when the user works with one assistant today. It is the convention coding agents share, so the context you establish stays readable by whatever the project uses next — and on Claude Code specifically, adding a `CLAUDE.md` alongside an `AGENTS.md` stops the `AGENTS.md` being read at all by default. Recognising an assistant-specific file the project already has is a different matter: read it as the context it is.
 
 Fill it from what the user actually confirms. Where they don't know yet, leave the subject out and tell them it is still open, rather than writing a plausible-sounding answer: an entry point full of invented facts is worse than no entry point, because everything downstream trusts it.
 
