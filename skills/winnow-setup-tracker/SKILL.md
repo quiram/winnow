@@ -35,7 +35,9 @@ Read access proving out does not prove write access, and you are not going to te
 
 ## Step 3 — Record the answer
 
-A tracker the user had to name once is knowledge the project should carry. Once it is settled, hand it to **update-context** to record in the AI context — the name of the tracker, and how winnow talks to it — so no later run has to ask.
+A tracker the user had to name once is knowledge the project should carry, and recording it is what stops every later run from repeating this conversation. Once it is settled, hand it to **update-context** to record in the AI context: the name of the tracker, and how winnow talks to it.
+
+If the context already said both and you only confirmed them, there is nothing to record. Say so and move on — a re-run of this skill on a settled project should be a read and a probe, not an edit.
 
 While you are there, ask whether the project has conventions for writing tickets that aren't yet written down: a template, labels, components, naming, workflow states, a cheatsheet for the tracker's tooling. create-tasks reads those and lets them override its own defaults, so anything the user can state now is worth recording alongside the tracker. Don't press if they have none — defaults exist for exactly that case.
 

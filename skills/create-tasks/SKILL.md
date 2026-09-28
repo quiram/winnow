@@ -26,9 +26,11 @@ Everything in the proposal has already been agreed with the user — act on all 
 
 Read the project's AI context for any project-specific instructions on writing tickets: templates, labels, components, naming, workflow states, cheatsheets for the tracker's tooling. Project instructions always override the defaults in this skill.
 
-For the tracker itself, invoke **winnow-setup-tracker** and resume once it reports back. What you need from it is the tracker this project uses and a verified way to talk to it — the CLI, MCP server or API credentials, already probed non-destructively. It asks the user when the documentation names no tracker or more than one, and records the answer in the AI context so the question doesn't come up again.
+The same read should tell you **which tracker this project uses and how to reach it**. That answer is recorded in the context precisely so it is settled once and read thereafter: take it and get on with the work. You do not need a separate connectivity probe either — searching the tracker for existing similar tickets, in Step 3, is a read-only interaction that comes before anything is created, so a broken credential surfaces there, in time to stop.
 
-If it reports anything missing — the CLI isn't installed, the MCP server isn't configured, a credential is absent, permissions are insufficient — **stop**, and relay exactly what is needed. Do not create a partial batch of tickets and fail halfway through discovering this.
+Invoke **winnow-setup-tracker** only when the context cannot answer: it names no tracker, or names more than one without saying which is this project's, or the tooling turns out to be unusable when you first reach for it. What you need back is the tracker and a verified way to talk to it — CLI, MCP server or API credentials, already probed non-destructively. It asks the user where the documentation can't answer, and records the outcome so the next run reads it instead of asking again.
+
+If anything is missing — the CLI isn't installed, the MCP server isn't configured, a credential is absent, permissions are insufficient — **stop**, and relay exactly what is needed. Do not create a partial batch of tickets and fail halfway through discovering this.
 
 ## Step 3 — Prepare the tickets
 
