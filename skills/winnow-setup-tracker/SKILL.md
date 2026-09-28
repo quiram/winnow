@@ -4,18 +4,18 @@ description: >-
   The tracker part of setup-winnow: establish which task tracker a project uses
   and confirm winnow can actually talk to it — identify the tracker from the AI
   context, ask when the documentation names none or more than one, probe the
-  CLI, MCP server or API credentials non-destructively, and record the answer so
-  the question never recurs. Use when setup-winnow delegates the tracker here,
-  or when create-tasks or process-requirements need a tracker they cannot find.
-  Someone asking to prepare a project or machine for winnow wants setup-winnow,
-  which covers this and every other prerequisite.
+  CLI, MCP server or API credentials non-destructively, and record the answer
+  so the question never recurs. Use when setup-winnow delegates the tracker
+  here, or when create-tasks or winnow need a tracker they cannot find. Someone
+  asking to prepare a project or machine for winnow wants setup-winnow, which
+  covers this and every other prerequisite.
 ---
 
 # Set up winnow's task tracker
 
 You settle two things: **which** tracker this project uses, and whether winnow can actually reach it. Both are cheap to establish now and expensive to discover late — create-tasks needs them at the moment tickets are ready to be created, by which point the user has already agreed every one of them in conversation.
 
-You are the tracker part of **setup-winnow**, which checks winnow's other prerequisites and delegates here; create-tasks and process-requirements invoke you directly when they need a tracker they cannot find. You never create, edit or close a ticket — you confirm that create-tasks could.
+You are the tracker part of **setup-winnow**, which checks winnow's other prerequisites and delegates here; create-tasks and winnow invoke you directly when they need a tracker they cannot find. You never create, edit or close a ticket — you confirm that create-tasks could.
 
 ## Step 1 — Identify the tracker
 

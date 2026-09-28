@@ -1,19 +1,19 @@
 ---
 name: transcribe-audio
 description: >-
-  Transcribe audio to text entirely on the local machine using a
-  Whisper-family model — no hosted transcription service, no account. File
-  mode turns a complete audio file (voice note, recording) into a transcript
-  in one shot; streaming mode turns a live PCM audio feed into finalized
-  transcript segments as they become stable. Use when given an audio file or
-  voice note to transcribe or process, or when another skill needs text from
-  audio — process-requirements delegates audio input here, and
-  listen-to-meeting builds on the streaming mode.
+  Transcribe audio to text entirely on the local machine using a Whisper-family
+  model — no hosted transcription service, no account. File mode turns a
+  complete audio file (voice note, recording) into a transcript in one shot;
+  streaming mode turns a live PCM audio feed into finalized transcript segments
+  as they become stable. Use when given an audio file or voice note to
+  transcribe or process, or when another skill needs text from audio — winnow
+  delegates audio input here, and listen-to-meeting builds on the streaming
+  mode.
 ---
 
 # Transcribe audio
 
-Convert audio to text locally. This skill is a generic building block: it has no opinion about what the transcript is *for*. Other winnow skills delegate to it (process-requirements for audio input, listen-to-meeting for live capture), and it works just as well standalone.
+Convert audio to text locally. This skill is a generic building block: it has no opinion about what the transcript is *for*. Other skills in the package delegate to it (winnow for audio input, listen-to-meeting for live capture), and it works just as well standalone.
 
 Everything runs on this machine. The only network access ever made is the one-time download of the model weights into the local Hugging Face cache; after that, transcription works offline. Never substitute a hosted transcription API, even if one is available in your environment.
 
