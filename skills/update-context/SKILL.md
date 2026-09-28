@@ -2,23 +2,23 @@
 name: update-context
 description: >-
   Apply approved knowledge updates from a requirements proposal to the
-  project's AI context documentation, keeping every document cohesive,
-  human-sounding, and describing present state only. Use after
-  process-requirements has produced approved context updates, or when asked to
-  fold agreed knowledge, decisions or conventions into the project's context
-  docs. Requires the project to define which knowledge belongs in which
-  document; halts and asks if it doesn't.
+  project's AI context documentation, keeping every document cohesive, human-
+  sounding, and describing present state only. Use after winnow has produced
+  approved context updates, or when asked to fold agreed knowledge, decisions
+  or conventions into the project's context docs. Requires the project to
+  define which knowledge belongs in which document; halts and asks if it
+  doesn't.
 ---
 
 # Update context
 
-You are part of a three-skill pipeline: **process-requirements** distils input into a proposal; then this skill applies the proposal's context updates to the project's AI context documentation, while **create-tasks** handles the proposal's tasks. The two application skills are peers — they run independently, in any order. This skill never creates or edits tickets.
+You are part of a three-skill pipeline: **winnow** distils input into a proposal; then this skill applies the proposal's context updates to the project's AI context documentation, while **create-tasks** handles the proposal's tasks. The two application skills are peers — they run independently, in any order. This skill never creates or edits tickets.
 
 The AI context exists so that *people and AI alike know how to work on this project after reading it*. Every edit you make is judged against that goal.
 
 ## Step 1 — Load the work
 
-Operate from a proposal file written by process-requirements. Proposals live outside the repo: in the coding agent's scratchpad/staging area when the harness provides one, otherwise in `/tmp/winnow/<repo-folder-name>-<hash>/proposals/`, where `<hash>` is the first 8 hex characters of the SHA-256 of the repo root's absolute path (`printf '%s' "<abs repo root>" | shasum -a 256 | cut -c1-8`). If the user points you at one, use it; otherwise use the most recent proposal with unapplied context updates, confirming your pick with the user.
+Operate from a proposal file written by winnow. Proposals live outside the repo: in the coding agent's scratchpad/staging area when the harness provides one, otherwise in `/tmp/winnow/<repo-folder-name>-<hash>/proposals/`, where `<hash>` is the first 8 hex characters of the SHA-256 of the repo root's absolute path (`printf '%s' "<abs repo root>" | shasum -a 256 | cut -c1-8`). If the user points you at one, use it; otherwise use the most recent proposal with unapplied context updates, confirming your pick with the user.
 
 If the user instead hands you facts directly in conversation ("record that we've chosen Kafka"), just work from the conversation — the user's request is the approval. Don't create a proposal file only to delete it.
 

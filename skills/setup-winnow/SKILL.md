@@ -17,7 +17,7 @@ You get a machine and a project into a state where every winnow skill just works
 
 Four things winnow depends on:
 
-- **The AI context and its doc map** — process-requirements grounds its triage in it, update-context writes to it, listen-to-meeting checks live statements against it.
+- **The AI context and its doc map** — winnow grounds its triage in it, update-context writes to it, listen-to-meeting checks live statements against it.
 - **The task tracker** — create-tasks writes tickets to it and needs a working way in.
 - **A working area outside the host repo** — the pipeline hands proposals and transcripts between skills without leaving a footprint in the project.
 - **The audio stack** — what transcribe-audio and listen-to-meeting run on, if this machine will handle voice notes or live meetings at all.
@@ -67,7 +67,7 @@ Invoke the skill that owns each part, in this order, and never do its work yours
 
 Skip any part Step 1 found in place, or that the user declined. If one of them cannot finish — the user cancels, a permission needs a terminal restart, a credential is theirs to create — carry on with the rest and record what remains. A blocked part is not a reason to leave the others undone.
 
-One thing is yours rather than a part's: if the user expects to bring meeting transcripts in as links (a Granola MCP server, an authenticated fetch for a private doc), confirm such a tool is actually reachable, and say so if it isn't — process-requirements stops rather than guess at a transcript it cannot read. Nothing else depends on it.
+One thing is yours rather than a part's: if the user expects to bring meeting transcripts in as links (a Granola MCP server, an authenticated fetch for a private doc), confirm such a tool is actually reachable, and say so if it isn't — winnow stops rather than guess at a transcript it cannot read. Nothing else depends on it.
 
 ## Step 4 — Give the verdict
 
@@ -75,7 +75,7 @@ Close with the state everything ended in, part by part: what was already in plac
 
 Then say what it means in the terms the user cares about — which skills are ready, and which are not and why:
 
-- **process-requirements, update-context, create-tasks** — the pipeline, ready once the AI context, its doc map and the tracker are in place.
+- **winnow, update-context, create-tasks** — the pipeline, ready once the AI context, its doc map and the tracker are in place.
 - **transcribe-audio, listen-to-meeting** — voice notes and live meetings, ready once the audio stack passes its self-test.
 
 If a permission grant needs the terminal restarted, say so plainly, and that re-running this skill afterwards is how to confirm it — it will change nothing that is already done.

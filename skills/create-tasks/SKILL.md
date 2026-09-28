@@ -5,18 +5,17 @@ description: >-
   proposal: goal-first, deduplicated, conflict-checked, one goal per ticket,
   independent where possible. Discovers the tracker and its tooling from the
   project's documentation and refuses to guess when they are missing or
-  ambiguous. Use after process-requirements has produced approved candidate
-  tasks, or when asked to raise tickets, issues or tasks from agreed
-  requirements.
+  ambiguous. Use after winnow has produced approved candidate tasks, or when
+  asked to raise tickets, issues or tasks from agreed requirements.
 ---
 
 # Create tasks
 
-You are part of a three-skill pipeline: **process-requirements** distils input into a proposal; then this skill turns the proposal's tasks into tickets in the project's task tracker, while **update-context** handles the proposal's knowledge. The two application skills are peers — they run independently, in any order. This skill never edits the AI context documentation.
+You are part of a three-skill pipeline: **winnow** distils input into a proposal; then this skill turns the proposal's tasks into tickets in the project's task tracker, while **update-context** handles the proposal's knowledge. The two application skills are peers — they run independently, in any order. This skill never edits the AI context documentation.
 
 ## Step 1 — Load the work
 
-Operate from a proposal file written by process-requirements. Proposals live outside the repo: in the coding agent's scratchpad/staging area when the harness provides one, otherwise in `/tmp/winnow/<repo-folder-name>-<hash>/proposals/`, where `<hash>` is the first 8 hex characters of the SHA-256 of the repo root's absolute path (`printf '%s' "<abs repo root>" | shasum -a 256 | cut -c1-8`). If the user points you at one, use it; otherwise use the most recent proposal with uncreated tasks, confirming your pick with the user.
+Operate from a proposal file written by winnow. Proposals live outside the repo: in the coding agent's scratchpad/staging area when the harness provides one, otherwise in `/tmp/winnow/<repo-folder-name>-<hash>/proposals/`, where `<hash>` is the first 8 hex characters of the SHA-256 of the repo root's absolute path (`printf '%s' "<abs repo root>" | shasum -a 256 | cut -c1-8`). If the user points you at one, use it; otherwise use the most recent proposal with uncreated tasks, confirming your pick with the user.
 
 If the user instead describes tasks directly in conversation, just work from the conversation — the user's request is the approval. Don't create a proposal file only to delete it.
 

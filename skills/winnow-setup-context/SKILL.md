@@ -5,17 +5,17 @@ description: >-
   knowledge — establish an AI context where none exists, and a doc map (an
   indication of which kind of knowledge belongs in which document) where the
   context has none, proposing a concrete default structure for the user to
-  approve. Use when setup-winnow delegates the AI context here, or when
-  update-context finds no doc map and process-requirements finds no context to
-  ground itself in. Someone asking to prepare a project or machine for winnow
-  wants setup-winnow, which covers this and every other prerequisite.
+  approve. Use when setup-winnow delegates the AI context here, or when update-
+  context finds no doc map and winnow finds no context to ground itself in.
+  Someone asking to prepare a project or machine for winnow wants setup-winnow,
+  which covers this and every other prerequisite.
 ---
 
 # Set up winnow's context
 
 You make a project's AI context fit to receive knowledge. Winnow reads that context to ground every judgement it makes and writes durable knowledge back into it, so two things must exist before any of that works: a context, and a **doc map** — an indication of which kind of knowledge belongs in which document. You establish whichever is missing and nothing more. You never file actual knowledge; that is update-context's job.
 
-You are the context part of **setup-winnow**, which checks winnow's other prerequisites and delegates here. The skills that depend on this also invoke you directly when they find it missing — update-context cannot place anything without a doc map, and process-requirements cannot triage reliably without a context.
+You are the context part of **setup-winnow**, which checks winnow's other prerequisites and delegates here. The skills that depend on this also invoke you directly when they find it missing — update-context cannot place anything without a doc map, and winnow cannot triage reliably without a context.
 
 The work is the user's to approve. Nothing is written until they agree to it, and "not now" is a valid answer: report the gap and stop.
 
@@ -27,7 +27,7 @@ If you find one, the project's structure is that machinery's business, not yours
 
 ## Step 2 — Find the AI context and judge what is missing
 
-Look for the usual entry points: `AGENTS.md`, `CLAUDE.md`, `README.md`, a `docs/` or `context/` directory, or whatever the repo's own conventions point to — the same places process-requirements looks.
+Look for the usual entry points: `AGENTS.md`, `CLAUDE.md`, `README.md`, a `docs/` or `context/` directory, or whatever the repo's own conventions point to — the same places winnow looks.
 
 Three outcomes:
 
@@ -69,4 +69,4 @@ Create the folders and indexes the map describes only where they have content to
 
 Say what now exists, where the doc map is recorded, and what a skill reading this project will find. If the user declined part of it, or left subjects open in Step 3, name those precisely — they are the next thing someone will trip over.
 
-Report on the context only. When setup-winnow delegated to you, it owns the overall verdict; when update-context or process-requirements did, hand back and let them carry on with the work they paused.
+Report on the context only. When setup-winnow delegated to you, it owns the overall verdict; when update-context or winnow did, hand back and let them carry on with the work they paused.

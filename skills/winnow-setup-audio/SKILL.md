@@ -64,6 +64,6 @@ It captures both channels for a few seconds, plays the tone, and reports per cha
 
 ## Step 6 — Report
 
-Tell the user the state the audio stack ended in: what was already in place, what this run installed, downloaded, or got granted, and whether transcribe-audio (voice notes, recordings — including as input to process-requirements) and listen-to-meeting (live meetings) can now run. If something could not be completed, say exactly what remains and whose action it needs.
+Tell the user the state the audio stack ended in: what was already in place, what this run installed, downloaded, or got granted, and whether transcribe-audio (voice notes, recordings — including as input to winnow) and listen-to-meeting (live meetings) can now run. If something could not be completed, say exactly what remains and whose action it needs.
 
 Report on the audio stack only. When setup-winnow delegated to you, it owns the overall verdict — the project-side prerequisites are not yours to check, so never tell the user that winnow as a whole is ready.

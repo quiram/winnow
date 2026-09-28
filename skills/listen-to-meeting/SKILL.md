@@ -5,15 +5,14 @@ description: >-
   transcribe it locally in near-real-time, and flag unacknowledged
   contradictions and information gaps while the meeting is still running, so
   they can be resolved in the room. Deliberately narrow: it does not run the
-  winnow pipeline live — formal processing happens afterwards via
-  process-requirements on the full transcript. Use when asked to listen in
-  on, monitor, or join a live meeting or call, or to catch inconsistencies or
-  missing information as they happen.
+  pipeline live — formal processing happens afterwards via winnow on the full
+  transcript. Use when asked to listen in on, monitor, or join a live meeting
+  or call, or to catch inconsistencies or missing information as they happen.
 ---
 
 # Listen to meeting
 
-You are a live meeting watcher with two narrow jobs: flag contradictions the room hasn't noticed, and surface genuine gaps — statements that presuppose information nobody has stated, or that don't anchor to anything the project knows — while the people who can resolve them are still in the room. You do **not** triage requirements, update context, or create tasks live. When the meeting ends, you propose — never auto-run — **process-requirements** on the complete transcript, which is where the formal winnow pipeline begins.
+You are a live meeting watcher with two narrow jobs: flag contradictions the room hasn't noticed, and surface genuine gaps — statements that presuppose information nobody has stated, or that don't anchor to anything the project knows — while the people who can resolve them are still in the room. You do **not** triage requirements, update context, or create tasks live. When the meeting ends, you propose — never auto-run — **winnow** on the complete transcript, which is where the formal pipeline begins.
 
 Everything runs locally: capture through the OS's own facilities, transcription through the **transcribe-audio** skill's local Whisper model. No hosted transcription or meeting-bot service is ever involved.
 
@@ -51,7 +50,7 @@ Treat any clear plain-language statement to that effect as the stop signal.
 
 ## Step 3 — Ground yourself while capture warms up
 
-Discover the host project's AI context the same way process-requirements does — `AGENTS.md`, `CLAUDE.md`, `README.md`, `docs/`, or whatever the repo's conventions point to. Winnow has no context of its own; the project's recorded decisions, constraints and domain facts are one of the two baselines you check statements against. If no AI context exists, tell the user context-mismatch checking is unavailable and continue with in-meeting consistency checking only.
+Discover the host project's AI context the same way winnow does — `AGENTS.md`, `CLAUDE.md`, `README.md`, `docs/`, or whatever the repo's conventions point to. These skills have no context of their own; the project's recorded decisions, constraints and domain facts are one of the two baselines you check statements against. If no AI context exists, tell the user context-mismatch checking is unavailable and continue with in-meeting consistency checking only.
 
 Create `<session-dir>/meeting-state.md` to hold the second baseline: a running model of what has been asserted **in this meeting** — one line per assertion, with channel, timestamp, and a status of `live` or `corrected` — plus the *candidate gaps* you are watching (status `watching`, `surfaced`, or `filled`). Also track two things there: the number of the last chunk you processed, and the meeting-clock time at which you last said anything to the user. Keep this file updated as you go: it is what lets you resume cleanly if your conversation context gets compacted mid-meeting.
 
@@ -90,7 +89,7 @@ Surface a flag **only** if at least one of these holds:
 3. **Build-changing ambiguity** — taken at face value it would change what gets built, and the room moved on without pinning it down.
 4. **Unanchored, build-changing gap** — the statement presupposes information that neither this meeting nor the recorded context contains, the discussion is proceeding as if it were settled, and what gets built depends on it.
 
-Never flag: rephrasings or elaborations; refinements that narrow an earlier statement without reversing it; hedged exploration ("what if...", "maybe we could...") unless it gets adopted as a decision; small talk and logistics; figures differing only in precision ("about a hundred" vs "103"). And for gaps specifically: terms or references the participants visibly share even though the recorded context doesn't — the room's common knowledge is a context-update candidate for after the meeting, not a live question — and gaps nothing in the meeting depends on resolving now, which process-requirements will catch on the full transcript anyway. A live gap flag is only worth its interruption when asking in the room beats asking afterwards.
+Never flag: rephrasings or elaborations; refinements that narrow an earlier statement without reversing it; hedged exploration ("what if...", "maybe we could...") unless it gets adopted as a decision; small talk and logistics; figures differing only in precision ("about a hundred" vs "103"). And for gaps specifically: terms or references the participants visibly share even though the recorded context doesn't — the room's common knowledge is a context-update candidate for after the meeting, not a live question — and gaps nothing in the meeting depends on resolving now, which winnow will catch on the full transcript anyway. A live gap flag is only worth its interruption when asking in the room beats asking afterwards.
 
 When you are unsure whether the room noticed a contradiction, hold the flag for one more chunk and raise it only if it is still unresolved then. Gaps get a longer leash: meetings routinely clarify themselves, so hold a candidate gap for at least two further chunks (or until the topic visibly moves on) and surface it only if it is still open and the discussion has kept building on the unstated assumption — dropping it silently the moment the meeting fills it. Bias firmly toward silence: a flag must be rare enough that every one gets read. A chatty flagger gets ignored, and then it catches nothing.
 
@@ -126,6 +125,6 @@ When the user says the meeting is over:
 
 1. **Tear down the capture**: create a file named `stop` in the session directory; the tool flushes remaining audio, writes the final chunks, completes `transcript.md`, and exits. Confirm it has exited before proceeding.
 2. **Report briefly**: duration, number of flags raised, and where any unresolved flags stand.
-3. **Propose the pipeline**: offer to run **process-requirements** on `<session-dir>/transcript.md` — the full accumulated transcript. **Only proceed if the user confirms; never auto-chain.** This is the same human checkpoint winnow uses between all its skills.
+3. **Propose the pipeline**: offer to run **winnow** on `<session-dir>/transcript.md` — the full accumulated transcript. **Only proceed if the user confirms; never auto-chain.** This is the same human checkpoint the package uses between all its skills.
 
-If the user declines, tell them where the transcript lives so it isn't lost, and leave the session directory in place. If they proceed, process-requirements takes over — the session directory can be cleaned up once the pipeline has consumed the transcript.
+If the user declines, tell them where the transcript lives so it isn't lost, and leave the session directory in place. If they proceed, winnow takes over — the session directory can be cleaned up once the pipeline has consumed the transcript.

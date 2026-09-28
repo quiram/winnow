@@ -10,7 +10,7 @@ apm.yml                                   # package manifest + marketplace block
 .claude/skills/release/SKILL.md           # repo-local release skill (not part of the package)
 assets/logo.svg                           # the winnowing basket
 skills/
-  process-requirements/SKILL.md
+  winnow/SKILL.md
   update-context/SKILL.md
   create-tasks/SKILL.md
   transcribe-audio/
@@ -32,7 +32,7 @@ skills/
 
 Winnow ships nine skills, but only six of them are meant to be called by name:
 
-- **Public** — `process-requirements`, `update-context`, `create-tasks`,
+- **Public** — `winnow`, `update-context`, `create-tasks`,
   `transcribe-audio`, `listen-to-meeting`, `setup-winnow`. These are what the
   README documents.
 - **Private** — `winnow-setup-context`, `winnow-setup-tracker`,
