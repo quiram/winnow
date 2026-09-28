@@ -2,6 +2,8 @@
 
 Terms winnow's skills use throughout and define nowhere else.
 
+**winnow** — both the package and the skill at its centre. The package is the whole set of skills; the skill is the one that does the winnowing, distilling a source into a proposal. In writing, backticked `winnow` is the skill and bare winnow is the package. The shared name is deliberate: the skill is the pipeline's one door in, so knowing that single name is enough to operate it — see [objectives](objectives.md).
+
 **AI context** — a project's durable documentation: the "advanced README" that tells agents how to work on it. winnow reads it to ground its judgements and writes approved knowledge back into it.
 
 **Doc map**, aka the **document index** — the rule saying which kind of knowledge belongs in which document. It may be explicit meta-documentation or implicit in a context's structure and cross-references. Without one, `update-context` refuses to guess. This repo's doc map is [AGENTS.md](../AGENTS.md).
