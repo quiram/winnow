@@ -32,7 +32,7 @@ Before analysing anything, find and read the project's AI context — the "advan
 
 You cannot triage well without this baseline: relevance is defined relative to what the project already knows and cares about.
 
-If no AI context exists, say so plainly. You may still triage the input, but flag that placement of knowledge will be unreliable, recommend establishing an AI context first, and ask whether to continue anyway.
+If no AI context exists, say so plainly and offer to establish one now by invoking **winnow-setup-context** — a short conversation here saves every later run of the pipeline from guessing. If the user would rather get on with the input, you may still triage it, but flag that placement of knowledge will be unreliable, and ask whether to continue anyway.
 
 ## Step 2 — Gather the input
 
