@@ -1,5 +1,5 @@
 ---
-name: process-requirements
+name: winnow
 description: >-
   Distil requirements from a brainstorming conversation or from meeting
   transcripts. Separates noise from durable project knowledge and actionable
@@ -11,11 +11,11 @@ description: >-
   discussion.
 ---
 
-# Process requirements
+# Winnow
 
 You are the analysis stage of a three-skill pipeline:
 
-1. **process-requirements** (this skill) — understand the input, triage it, and write a proposal.
+1. **winnow** (this skill) — understand the input, triage it, and write a proposal.
 2. **update-context** — folds approved knowledge into the project's AI context documentation.
 3. **create-tasks** — turns approved work items into tickets in the project's task tracker.
 
