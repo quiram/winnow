@@ -6,9 +6,9 @@ Terms winnow's skills use throughout and define nowhere else.
 
 **Doc map**, aka the **document index** — the rule saying which kind of knowledge belongs in which document. It may be explicit meta-documentation or implicit in a context's structure and cross-references. Without one, `update-context` refuses to guess. This repo's doc map is [AGENTS.md](../AGENTS.md).
 
-**Proposal** — the short-lived handoff file between `process-requirements` and the skills that apply its output. Kept outside the consuming repo and deleted once applied. Plumbing, never a deliverable.
+**Proposal** — the short-lived handoff file between `winnow` and the skills that apply its output. Kept outside the consuming repo and deleted once applied. Plumbing, never a deliverable.
 
-**The three buckets** — how `process-requirements` sorts everything it hears: *irrelevant* (discarded), *durable knowledge* (to the AI context), *actionable work* (to the tracker).
+**The three buckets** — how `winnow` sorts everything it hears: *irrelevant* (discarded), *durable knowledge* (to the AI context), *actionable work* (to the tracker).
 
 **Host repo / consuming repo** — the project winnow runs *against*, as distinct from this one.
 
