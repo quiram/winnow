@@ -13,6 +13,7 @@ Four homes, each with its own audience. New knowledge goes where its audience is
 | `ai-context/objectives.md` | What winnow is for and the properties it is trying to hold. |
 | `ai-context/glossary.md` | Terms the skills use throughout and define nowhere else. |
 | `ai-context/task-tracking.md` | Which tracker holds work on winnow, how to reach it, and any ticket conventions. |
+| `ai-context/ways-of-working.md` | Conventions for changing this repo: documentation, commits, releases. |
 | `README.md` | What winnow is, what each public skill does, what a consuming repo must provide, how to install it. The user-facing surface. |
 | `CONTRIBUTING.md` | Everything needed to change winnow's code: layout, architectural decisions and their reasoning, the release process. |
 | `AGENTS.md` (this file) | Orientation, vocabulary, tracker, conventions, and the routing rule itself. It points rather than repeats. |
@@ -22,8 +23,3 @@ So: something a *user* needs → README. Something a *contributor* needs → CON
 
 There is no `docs/` tree, and none is needed until a document exists that no home above can hold.
 
-## Conventions
-
-- **Public skills are documented in README, private parts only in CONTRIBUTING** — and the package description in `apm.yml` names no private part either, because both document how to use winnow rather than how it works.
-- **Releases go through the repo-local `release` skill** at `.claude/skills/release/SKILL.md`, which is not part of the package. Versions follow semver and are never picked on the user's behalf.
-- **Commits are small and single-purpose** — one concern each, never a single sweep at the end of a piece of work.
