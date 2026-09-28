@@ -34,6 +34,8 @@ You cannot triage well without this baseline: relevance is defined relative to w
 
 If no AI context exists, say so plainly and offer to establish one now by invoking **winnow-setup-context** — a short conversation here saves every later run of the pipeline from guessing. If the user would rather get on with the input, you may still triage it, but flag that placement of knowledge will be unreliable, and ask whether to continue anyway.
 
+If the context exists but doesn't say where tasks are tracked, offer **winnow-setup-tracker** the same way. create-tasks will need that answer, and settling it now is cheaper than settling it once tickets are drafted and waiting to be created.
+
 ## Step 2 — Gather the input
 
 This skill works conversationally: a person is present to answer questions, whether the input is a live brainstorm or a transcript brought in for processing.
