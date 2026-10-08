@@ -1,0 +1,58 @@
+lockfile_version: '1'
+apm_version: 0.33.0
+dependencies:
+- repo_url: quiram/mill
+  name: mill
+  host: github.com
+  resolved_commit: ee4548cb1891b11263371e39485d1eb1a463bf73
+  resolved_ref: v0.1.0
+  version: 0.1.0
+  package_type: marketplace_plugin
+  deployed_files:
+  - .claude/skills/recommend-model
+  - .claude/skills/recommend-model/SKILL.md
+  - .claude/skills/start-task
+  - .claude/skills/start-task/SKILL.md
+  deployed_file_hashes:
+    .claude/skills/recommend-model/SKILL.md: sha256:78aec49734dfd12807358c95c90bcdb234b29f962a3246b0bc51e50021ee29c8
+    .claude/skills/start-task/SKILL.md: sha256:8e7f31b0e89081d36d86c6a4f308bb65d868f9c2ae8fa4df3b980754070c20b9
+  content_hash: sha256:00066a7c867eb9a18779c6be644f9725c2e8cffd026cc74c88267ab1313472b5
+  is_dev: true
+  declared_license: MIT
+deployments:
+- kind: project-relative
+  target: claude
+  value: .claude/skills/recommend-model
+  runtime: null
+  scope: project
+  owners:
+  - quiram/mill
+  active_owner: quiram/mill
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/recommend-model/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - quiram/mill
+  active_owner: quiram/mill
+  content_hash: sha256:78aec49734dfd12807358c95c90bcdb234b29f962a3246b0bc51e50021ee29c8
+- kind: project-relative
+  target: claude
+  value: .claude/skills/start-task
+  runtime: null
+  scope: project
+  owners:
+  - quiram/mill
+  active_owner: quiram/mill
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/start-task/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - quiram/mill
+  active_owner: quiram/mill
+  content_hash: sha256:8e7f31b0e89081d36d86c6a4f308bb65d868f9c2ae8fa4df3b980754070c20b9
