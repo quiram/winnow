@@ -13,7 +13,7 @@ dependencies:
 includes: auto
 devDependencies:
   apm:
-    - quiram/mill#v0.1.1
+    - quiram/mill#v0.1.2
 scripts: {}
 marketplace:
   owner:
