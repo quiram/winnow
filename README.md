@@ -14,6 +14,8 @@ Winnowing is one of farming's oldest techniques: after threshing, the harvest is
 
 That is precisely what these skills do to a conversation. A meeting transcript or a brainstorm gets tossed into the air, scrutiny blows the small talk and noise away, and two kinds of grain fall back to be kept: knowledge worth recording and work worth doing. The logo is a winnowing basket mid-toss.
 
+Winnowing is only the middle of the harvest, though. Once the chaff is gone, the grain still has to be ground into something you can use, and that second half belongs to [mill](https://github.com/quiram/mill), a sibling package that takes the work winnow has sifted out and processes it into the final product.
+
 ## The pipeline
 
 The core pipeline is three skills, split along a separation of concerns: distilling knowledge from a source and deciding where it belongs is one job; applying it to its destination is another. Audio needs no separate step from the user: hand winnow a voice note or recording and it delegates transcription to **transcribe-audio** transparently (that skill also works standalone), while **listen-to-meeting** accompanies a live meeting. A companion **setup-winnow** skill prepares the machine and the project for all of it — **run it before first use**, so documentation structure, tracker access, model downloads, native compilation, and permission prompts are settled at a calm moment instead of mid-pipeline or at the start of a meeting. Before applying anything, the skills summarise what is about to happen:
