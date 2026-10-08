@@ -4,9 +4,9 @@ dependencies:
 - repo_url: quiram/mill
   name: mill
   host: github.com
-  resolved_commit: ee4548cb1891b11263371e39485d1eb1a463bf73
-  resolved_ref: v0.1.0
-  version: 0.1.0
+  resolved_commit: 2d564720d14947ad9d4faa858f917c11a24fd18d
+  resolved_ref: v0.1.1
+  version: 0.1.1
   package_type: marketplace_plugin
   deployed_files:
   - .claude/skills/recommend-model
@@ -15,8 +15,8 @@ dependencies:
   - .claude/skills/start-task/SKILL.md
   deployed_file_hashes:
     .claude/skills/recommend-model/SKILL.md: sha256:78aec49734dfd12807358c95c90bcdb234b29f962a3246b0bc51e50021ee29c8
-    .claude/skills/start-task/SKILL.md: sha256:8e7f31b0e89081d36d86c6a4f308bb65d868f9c2ae8fa4df3b980754070c20b9
-  content_hash: sha256:00066a7c867eb9a18779c6be644f9725c2e8cffd026cc74c88267ab1313472b5
+    .claude/skills/start-task/SKILL.md: sha256:bd98970fdd94f66253f8716d2c806a9c970d79d7cb0bad8f488c07e856ebfb5a
+  content_hash: sha256:e0b46f46e1d1163e90f251d2bcf1873c223134b524f41c8a9ee967b0964f19dd
   is_dev: true
   declared_license: MIT
 deployments:
@@ -55,4 +55,4 @@ deployments:
   owners:
   - quiram/mill
   active_owner: quiram/mill
-  content_hash: sha256:8e7f31b0e89081d36d86c6a4f308bb65d868f9c2ae8fa4df3b980754070c20b9
+  content_hash: sha256:bd98970fdd94f66253f8716d2c806a9c970d79d7cb0bad8f488c07e856ebfb5a
