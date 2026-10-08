@@ -14,7 +14,7 @@ Winnowing is one of farming's oldest techniques: after threshing, the harvest is
 
 That is precisely what these skills do to a conversation. A meeting transcript or a brainstorm gets tossed into the air, scrutiny blows the small talk and noise away, and two kinds of grain fall back to be kept: knowledge worth recording and work worth doing. The logo is a winnowing basket mid-toss.
 
-Winnowing is only the middle of the harvest, though. Once the chaff is gone, the grain still has to be ground into something you can use, and that second half belongs to [mill](https://github.com/quiram/mill), a sibling package that takes the work winnow has sifted out and processes it into the final product. The tickets winnow raises are exactly what mill's `start-task` picks up, though neither package requires the other.
+Winnowing is only the middle of the harvest, though. Once the chaff is gone, the grain still has to be ground into something you can use, and that second half belongs to [mill](https://github.com/quiram/mill), a sibling package that takes the work winnow has sifted out and processes it into the final product.
 
 ## The pipeline
 
