@@ -102,6 +102,19 @@ If the engine ever gains a third consumer, revisit this: extracting it to a
 published Python package, declared as a normal dependency in each script's PEP
 723 header, is the clean answer that APM's model actually supports.
 
+## Speaker attribution without diarization
+
+`listen-to-meeting` does not identify speakers. It captures the microphone
+(**Me**) and the system audio (**Others**) as two separate channels and treats
+a switch between them as the signal that someone else is now talking.
+
+That is deliberate. WhisperX can diarize, but it requires the user to accept a
+model licence before it will run, and a prerequisite that cannot be settled by
+`setup-winnow` on the user's behalf does not belong in a pipeline meant to work
+out of the box. The channel split costs nothing to set up and is enough for the
+skill's purpose, which is to catch inconsistencies and gaps, not to minute who
+said what.
+
 ## Releasing
 
 Releasing is handled by the repo-local `release` skill: with a coding agent, ask it to "release version X.Y.Z". The skill lives at [.claude/skills/release/SKILL.md](.claude/skills/release/SKILL.md) — it is not part of the winnow package — and doubles as the manual step-by-step instructions if you're releasing by hand.
