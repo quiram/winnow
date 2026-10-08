@@ -77,7 +77,7 @@ Actively look for trouble; don't just transcribe:
 - candidate tasks with **no discernible goal**, or goals with no path to done;
 - scope that is implied but never confirmed.
 
-Ask the user about all of it. Group related questions together rather than dripping them one at a time, and offer your best-guess interpretation alongside each question so the user can simply confirm. Never invent answers, and never leave a conflict silently unresolved.
+Ask the user about all of it. If the host offers an interactive question facility, use it and ask one question at a time: each is easier to answer on its own. If the only channel is plain chat, put the related questions together in a single message instead, since stepping through them one by one would cost the user a turn each. Either way, offer your best-guess interpretation alongside each question so the user can simply confirm. Never invent answers, and never leave a conflict silently unresolved.
 
 ## Step 5 — Agree the findings
 
