@@ -1,5 +1,5 @@
 name: winnow
-version: 0.9.0
+version: 0.10.0
 description: >-
   Skills for managing a software product's requirements and roadmap: distil
   brainstorming conversations, meeting transcripts and audio recordings into
@@ -42,4 +42,4 @@ marketplace:
         gaps live during a meeting) and setup-winnow (one guided pass that
         prepares the machine and the project for all of them).
       source: ./
-      version: 0.9.0
+      version: 0.10.0
