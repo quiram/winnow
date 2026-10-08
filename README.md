@@ -44,7 +44,7 @@ It works conversationally, whether the input is a live brainstorm or one or more
 - **durable knowledge** — things anyone working on the project later would need, destined for the AI context;
 - **actionable work** — concrete tasks with a done-state and a why, destined for the tracker.
 
-It actively hunts gaps, conflicts, and ambiguity, and asks the user rather than inventing answers. Its output is an internal proposal handed to the other two skills — never a direct edit to docs or tracker.
+It actively hunts gaps, conflicts, and ambiguity, and asks the user rather than inventing answers. Where the host offers an interactive question prompt it asks one question at a time; in plain chat it groups them into a single message instead, and either way it offers a best guess with each question so the user can simply confirm. Its output is an internal proposal handed to the other two skills — never a direct edit to docs or tracker.
 
 ### update-context
 
