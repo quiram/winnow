@@ -12,7 +12,8 @@ dependencies:
   mcp: []
 includes: auto
 devDependencies:
-  apm: []
+  apm:
+    - quiram/mill#v0.1.0
 scripts: {}
 marketplace:
   owner:
