@@ -37,12 +37,11 @@ Apply these defaults to every candidate task; the project's own task-creation in
 
 1. **Begin with the business goal.** Every ticket must answer *why* before *what*. Technical tickets need at least an indirect business goal — reduce risk, increase performance, simplify development, cut costs. If you cannot state a goal for a task, take it back to the user rather than inventing one.
 
-2. **Check for existing similar tickets.** Search the tracker (open tickets, and recently closed ones) before creating each ticket. If a similar one exists, present it and judge the new information against it:
-   - **Complementary** — it adds to the existing ticket without clashing with it. Recommend updating the existing ticket: rewrite its description (see item 6) so it reads as if the new information had been known from the start, not as an addition tacked on. This is the preferred outcome, since skipping throws the new detail away.
-   - **Contradictory** — it pulls against the existing ticket. Tell the user about the conflict and ask which way to go (item 3).
-   - The user can always choose to **skip** (drop the new detail) or **create anyway** (a separate ticket).
+2. **Check for existing similar tickets.** Search the tracker (open tickets, and recently closed ones) before creating each ticket. If a similar one exists, present it and ask the user what to do with the new information: update the existing ticket, skip it, or create a separate ticket anyway. Recommend updating, since skipping throws the new detail away.
 
-   Whatever is decided, leave a brief comment on the existing ticket recording it (what was merged, what was considered and not adopted, or how a conflict was resolved), so the audit trail survives while the description holds only the current requirement. Add these comments as part of the flow; don't ask the user to confirm each one.
+   How to update depends on how the new information relates to the existing ticket. If it complements the ticket, rewrite the description (see item 6) so that it reads as if the new information had been known from the start, rather than as an addition tacked on. If it contradicts the ticket, tell the user about the conflict and ask which way to go (see item 3) before changing anything; the description then follows their decision.
+
+   Whichever option is taken, leave a brief comment on the existing ticket recording it: what was merged, what was considered and not adopted, or how a conflict was resolved. The description holds only the current requirement, and the comment keeps the trail of what was weighed. Add these comments as part of the flow; don't ask the user to confirm each one.
 
 3. **Check for conflicts.** Look for existing tickets that the new ones would contradict, duplicate in part, or clash with (e.g. an open ticket building the thing this one removes), including the similar ticket found in item 2. Surface any conflict and resolve it with the user before creating anything.
 
