@@ -97,9 +97,16 @@ What this costs, and how it is contained:
 - **The imported names are a contract.** Changing the signature of `Transcriber`
   or `StreamSegmenter` is a breaking change to listen-to-meeting, not a local
   refactor. `transcribe.py`'s docstring says so.
-- **The shared dependency pins are duplicated.** `faster-whisper` and `numpy`
-  appear in both PEP 723 headers and are kept in step by hand; both blocks carry
-  a comment saying so. Nothing enforces it.
+- **The shared dependency pins are duplicated.** `faster-whisper`, `av` and
+  `numpy` appear in both PEP 723 headers and are kept in step by hand; both
+  blocks carry a comment saying so. Nothing enforces it.
+- **`av` is capped below 19 on purpose.** faster-whisper only requires `av>=11`,
+  so uv resolves the newest `av`, but faster-whisper 1.2.1 passes
+  `metadata_errors` to `av.open()`, which `av` 19 removed. File transcription
+  then crashes with a `TypeError` (`av` 16.1 to 18 are fine). Raise the cap only
+  once a faster-whisper release supports the newer `av`. `transcribe.py check`
+  decodes a second of generated audio, so it fails on a combination like this
+  instead of passing and leaving the crash for the first real transcription.
 
 If the engine ever gains a third consumer, revisit this: extracting it to a
 published Python package, declared as a normal dependency in each script's PEP
