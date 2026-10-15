@@ -272,6 +272,33 @@ def model_is_cached(model_size: str) -> bool:
         return False
 
 
+def decode_problem() -> str | None:
+    """Decode a second of silence the way `file` mode decodes audio.
+
+    Importing the dependencies is not enough: faster-whisper and its `av`
+    dependency can both import fine and still be incompatible, which only
+    shows when audio is actually decoded. Returns a description of the
+    failure, or None when decoding works.
+    """
+    import io
+    import wave
+
+    buf = io.BytesIO()
+    with wave.open(buf, "wb") as w:
+        w.setnchannels(1)
+        w.setsampwidth(2)
+        w.setframerate(16000)
+        w.writeframes(b"\x00\x00" * 16000)
+    buf.seek(0)
+    try:
+        from faster_whisper.audio import decode_audio
+
+        decode_audio(buf, sampling_rate=16000)
+    except Exception as exc:
+        return f"{type(exc).__name__}: {exc}"
+    return None
+
+
 def cmd_check(args) -> int:
     problems = []
     try:
@@ -279,6 +306,10 @@ def cmd_check(args) -> int:
         import numpy  # noqa: F401
     except Exception as exc:  # pragma: no cover - uv resolves these
         problems.append(f"python dependencies failed to import: {exc}")
+    else:
+        failure = decode_problem()
+        if failure:
+            problems.append(f"audio decoding failed: {failure}")
     cached = model_is_cached(args.model)
     print(f"dependencies: {'ok' if not problems else 'FAIL'}")
     print(f"model '{args.model}' cached: {'yes' if cached else 'no'}")
