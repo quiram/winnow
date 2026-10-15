@@ -23,7 +23,7 @@ The work is done by `scripts/transcribe.py` (in this skill's directory), a self-
 
 **Prerequisite: uv.** If `uv` is not on the PATH — or anything else below reports missing — invoke the **winnow-setup-audio** skill, which owns installation and setup guidance for winnow's whole audio stack; don't improvise a pip/venv workaround.
 
-Check readiness (verifies imports and reports whether the model is cached):
+Check readiness (verifies imports, decodes a short generated clip to prove the dependencies work together, and reports whether the model is cached):
 
 ```bash
 uv run <this-skill-dir>/scripts/transcribe.py check
