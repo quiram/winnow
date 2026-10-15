@@ -3,8 +3,12 @@
 # requires-python = ">=3.10"
 # dependencies = [
 #     # listen-to-meeting's listen.py imports this module, so it declares these
-#     # same two pins in its own header. Keep the two blocks in step.
+#     # same pins in its own header. Keep the two blocks in step.
 #     "faster-whisper>=1.1,<2",
+#     # faster-whisper declares only av>=11, but it passes `metadata_errors` to
+#     # av.open(), which av 19 removed: file transcription crashes there.
+#     # Raise the cap only after faster-whisper supports the newer av.
+#     "av<19",
 #     "numpy>=1.24",
 # ]
 # ///
