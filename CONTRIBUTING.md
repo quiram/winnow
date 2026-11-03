@@ -125,6 +125,17 @@ out of the box. The channel split costs nothing to set up and is enough for the
 skill's purpose, which is to catch inconsistencies and gaps, not to minute who
 said what.
 
+## The run log
+
+Decisions made in a run, including the decision not to act on something, vanish with the conversation: the proposal is deleted once applied, and the AI context and tracker only hold what was approved. The run log, step 7 of `winnow`, is the opt-in answer for projects that want that trail. It is off by default so no project gains files it never asked for, which is why it is the one exception to the footprint-free objective.
+
+Two decisions are worth knowing before changing it:
+
+- **`winnow` writes it, not `update-context`.** The log covers tasks as well as context updates, and `update-context` should know nothing about tasks. Handing it the log would couple it to `create-tasks`' territory.
+- **It is written between `create-tasks` and `update-context`.** `update-context` is the skill that offers to commit, so the log has to be in the working tree before it runs, or it would miss that commit. Running `create-tasks` first lets the log carry ticket links and record a task that failed. The two application skills are peers, so this order costs nothing. What remains is that context updates are logged as approved for execution, not as applied.
+
+It deliberately holds no raw transcript or other source material (it points at sources instead), and winnow keeps no index of the logs folder; that is the project's call.
+
 ## Working with mill
 
 [mill](https://github.com/quiram/mill) is a development dependency of this repo, not of the package: it sits under `devDependencies` in `apm.yml`, so people who install winnow never receive it. It exists so that contributors can use mill's `start-task` skill when beginning work here.

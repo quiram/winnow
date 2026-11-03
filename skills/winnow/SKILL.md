@@ -55,7 +55,7 @@ With multiple transcripts, process them all and keep per-source provenance: sour
 
 Sort everything in the input into exactly one of three buckets (or the fourth, hybrid case):
 
-**Irrelevant.** Small talk, scheduling logistics, tangents, transient status updates ("the build was red this morning"), and restatements of what the context already documents. Discard it — but list what you dropped, one line per item, when you present your findings, so the user can catch anything that shouldn't have been discarded. No record of discarded content is kept beyond that mention in the conversation.
+**Irrelevant.** Small talk, scheduling logistics, tangents, transient status updates ("the build was red this morning"), and restatements of what the context already documents. Discard it — but list what you dropped, one line per item, when you present your findings, so the user can catch anything that shouldn't have been discarded. No record of discarded content is kept beyond that mention in the conversation, unless the project has asked for a run log (Step 7), which lists discarded items too.
 
 **Durable knowledge → context update.** Decisions, constraints, domain facts, architectural choices, conventions, goals, non-goals. The test: *would someone (person or AI) working on this project in three months need this to do the work correctly?* If yes, it belongs in the AI context, not in a ticket comment where it will be lost.
 
@@ -83,9 +83,9 @@ Ask the user about all of it. If the host offers an interactive question facilit
 
 Present your findings in the chat: a short summary, then the proposed context updates, the candidate tasks, and what you discarded. Iterate in conversation until the user has decided what to do with each piece. Only what the user approves goes any further — anything not approved simply does not exist from here on.
 
-## Step 6 — Write the proposal and hand off
+## Step 6 — Write the proposal and create the tasks
 
-Write the proposal, containing only the approved items, **outside the repo**: the pipeline must leave no footprint in the host project, so never create working files or gitignore entries inside it. Prefer the coding agent's own staging area: if your harness provides a scratchpad or temporary-files directory for the session, put the proposal there. Only when no such area exists, fall back to:
+Write the proposal, containing only the approved items, **outside the repo**: apart from the run log, the pipeline must leave no footprint in the host project, so never create other working files or gitignore entries inside it. Prefer the coding agent's own staging area: if your harness provides a scratchpad or temporary-files directory for the session, put the proposal there. Only when no such area exists, fall back to:
 
 ```
 /tmp/winnow/<repo-folder-name>-<hash>/proposals/YYYY-MM-DD-<topic-slug>.md
@@ -101,4 +101,24 @@ There is no prescribed format. Structure the file however you like, as long as a
 - the **tasks** — each with its business goal, the work itself, what done looks like, and any dependency on another task in the same proposal;
 - the **sources** each item came from.
 
-Then run **update-context** for the approved context updates and **create-tasks** for the approved tasks — always by invoking those skills, never by replicating their work here. If the user has told you to "just do it all", that is your authorisation to invoke them directly, without pausing for further confirmation; otherwise, hand over when the user says to proceed.
+Run **create-tasks** for the approved tasks — always by invoking that skill, never by replicating its work here. If the user has told you to "just do it all", that is your authorisation to invoke it directly, without pausing for further confirmation; otherwise, hand over when the user says to proceed. Then continue with the run log (if any) and the context updates.
+
+## Step 7 — Write the run log (optional)
+
+**Default is off.** Skip this step unless the project's context asks for run logs. Nothing is written into the repo otherwise.
+
+When it does ask, you write the log yourself, not `update-context`: the log covers tasks as well as context, and `update-context` must know nothing about tasks. Write it after **create-tasks** has run, so it can link the tickets that were created and record any task that failed, and before **update-context** runs, so the log is already in the working tree when `update-context` offers to commit. The context updates are therefore recorded as approved for execution, not as applied.
+
+- **Location:** where the project's context says. If it asks for logs but names no location, use `winnow-transcripts/` under the project's context folder.
+- **Contents:** the source, the date, the participants, and the tasks and context updates that were proposed, approved for execution, and discarded, with a link to each created ticket. Never the raw transcript. Describe the source rather than reproducing it:
+  - a link to an external transcript or document: the link;
+  - a file: its path, not its content;
+  - pasted or inline content: say it was inline, without the text;
+  - a screenshot, image or audio recording: say what kind it was, without attaching it;
+  - any other kind of source: the same treatment, a description and a pointer where one exists, never the content.
+
+Don't create or maintain index files for the folder; that is the project's call.
+
+## Step 8 — Apply the context updates
+
+Run **update-context** for the approved context updates, by invoking it, with the same authorisation rule as Step 6. It runs last so that the run log is already in the working tree when it offers to commit.
