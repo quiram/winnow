@@ -127,14 +127,14 @@ said what.
 
 ## The run log
 
-Decisions made in a run, including the decision not to act on something, vanish with the conversation: the proposal is deleted once applied, and the AI context and tracker only hold what was approved. The run log, step 6 of `winnow`, is the opt-in answer for projects that want that trail. It is off by default so no project gains files it never asked for, which is why it is the one exception to the footprint-free objective.
+Decisions made in a run, including the decision not to act on something, vanish with the conversation: the proposal is deleted once applied, and the AI context and tracker only hold what was approved. The run log, step 7 of `winnow`, is the opt-in answer for projects that want that trail. It is off by default so no project gains files it never asked for, which is why it is the one exception to the footprint-free objective.
 
 Two decisions are worth knowing before changing it:
 
 - **`winnow` writes it, not `update-context`.** The log covers tasks as well as context updates, and `update-context` should know nothing about tasks. Handing it the log would couple it to `create-tasks`' territory.
-- **It is written before the handoff.** That way "executed" means approved, and the log is already in the working tree when `update-context` offers to commit, so it lands in the same commit as the context changes. The cost is that the log cannot hold ticket links or record an apply that failed. Writing it afterwards would fix both but would leave it outside that commit, and it would need a second write by a skill that has already handed over.
+- **It is written between `create-tasks` and `update-context`.** `update-context` is the skill that offers to commit, so the log has to be in the working tree before it runs, or it would miss that commit. Running `create-tasks` first lets the log carry ticket links and record a task that failed. The two application skills are peers, so this order costs nothing. What remains is that context updates are logged as approved for execution, not as applied.
 
-It deliberately holds no raw transcript, and winnow keeps no index of the logs folder; that is the project's call.
+It deliberately holds no raw transcript or other source material (it points at sources instead), and winnow keeps no index of the logs folder; that is the project's call.
 
 ## Working with mill
 

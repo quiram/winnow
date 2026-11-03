@@ -74,12 +74,12 @@ The handoff between skills is an internal, short-lived file the user never needs
 
 Decisions made in a run, including the decision not to act on something, otherwise vanish with the conversation. A project that wants that trail can opt in; **by default winnow writes nothing into your repo**.
 
-To opt in, say in the project's AI context that winnow runs should be logged, and optionally where. With no location given, logs go in `winnow-transcripts/` under the context folder. Once the findings are agreed and before anything is applied, winnow writes one log per run containing:
+To opt in, say in the project's AI context that winnow runs should be logged, and optionally where. With no location given, logs go in `winnow-transcripts/` under the context folder. Once the findings are agreed, winnow writes one log per run containing:
 
-- the source (a link when the transcript came from an external one), the date and the participants;
-- the tasks and context updates that were proposed, approved for execution, and discarded.
+- the source, the date and the participants;
+- the tasks and context updates that were proposed, approved for execution, and discarded, with a link to each created ticket.
 
-It never contains the raw transcript. Because it is written before the context is updated and the tickets are created, it holds no ticket links and does not record an apply that failed. winnow does not maintain an index of the logs folder; that is up to the project.
+It never contains the raw transcript or any other source material: a link is recorded as a link, a file as its path, and pasted text, screenshots and recordings are described as such, not reproduced. The log is written after the tickets are created and before the context is updated, so it carries the ticket links and any task that failed, but records context updates as approved rather than applied. winnow does not maintain an index of the logs folder; that is up to the project.
 
 ## What a consuming repo must provide
 
