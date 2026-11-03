@@ -10,6 +10,8 @@ Terms winnow's skills use throughout and define nowhere else.
 
 **Proposal** — the short-lived handoff file between `winnow` and the skills that apply its output. Kept outside the consuming repo and deleted once applied. Plumbing, never a deliverable.
 
+**Run log** — the optional record of a winnow run, written into the consuming repo only when the project's context asks for it. It lists the tasks and context updates proposed, those approved for execution and those discarded, with the source (a link when the transcript came from an external one), the date and the participants. It holds no raw transcript, and it is neither context nor the proposal. Without a stated location it goes in `winnow-transcripts/` under the project's context folder.
+
 **The three buckets** — how `winnow` sorts everything it hears: *irrelevant* (discarded), *durable knowledge* (to the AI context), *actionable work* (to the tracker).
 
 **Host repo / consuming repo** — the project winnow runs *against*, as distinct from this one.

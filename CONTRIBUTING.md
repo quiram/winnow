@@ -125,6 +125,35 @@ out of the box. The channel split costs nothing to set up and is enough for the
 skill's purpose, which is to catch inconsistencies and gaps, not to minute who
 said what.
 
+## The run log
+
+A project can ask winnow to keep a record of each run. It is off by default and
+on only when the project's context requests it; the location comes from that
+context, falling back to `winnow-transcripts/` under the context folder. The
+log records the decisions of a run: the tasks and context updates proposed,
+those approved for execution, and those discarded. Deciding not to do
+something is often as important as deciding to, and without the log that
+decision vanishes with the conversation.
+
+winnow writes the log itself rather than `update-context`, for two reasons. The
+log records a run, so it is not project context. And it covers tasks as well as
+context updates, and `update-context` should know nothing about tasks.
+
+It is written after the findings are agreed and before the handoff, so
+"executed" means approved. The log is then already in the working tree when
+`update-context` offers to commit, and goes in the same branch and PR. The cost
+is that it cannot hold ticket links or record an apply that failed.
+
+winnow places knowledge through the project's doc map and does not maintain
+index files; whether each folder needs one is the project's prerogative. Only
+when the project gives no guidance does `winnow-setup-context` suggest a base
+index that points to files and to folders with their own indexes.
+
+Committing is `update-context`'s job. It follows any commit, branch or PR
+policy in the project's context, and otherwise suggests a branch and a PR. It
+never suggests pushing straight to the default branch unless the project or the
+user does, because direct pushes are not good practice for teams.
+
 ## Working with mill
 
 [mill](https://github.com/quiram/mill) is a development dependency of this repo, not of the package: it sits under `devDependencies` in `apm.yml`, so people who install winnow never receive it. It exists so that contributors can use mill's `start-task` skill when beginning work here.
