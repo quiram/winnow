@@ -40,7 +40,7 @@ Shares its name with the package, because it is the pipeline's entry point: it i
 
 It works conversationally, whether the input is a live brainstorm or one or more meeting transcripts worked through with the user — inline, as files, as links (provided a tool with access exists), or as audio recordings, which it hands to transcribe-audio behind the scenes. It triages everything into three buckets:
 
-- **irrelevant** — discarded; the skill lists what it dropped when presenting its findings, and keeps no record beyond that;
+- **irrelevant** — discarded; the skill lists what it dropped when presenting its findings, and keeps no record beyond that unless the project opts in to a [run log](#the-run-log-optional);
 - **durable knowledge** — things anyone working on the project later would need, destined for the AI context;
 - **actionable work** — concrete tasks with a done-state and a why, destined for the tracker.
 
@@ -68,7 +68,18 @@ One guided, idempotent pass that leaves no prerequisite for a later skill to dis
 
 ## The proposal file
 
-The handoff between skills is an internal, short-lived file the user never needs to read — winnow's plumbing, not a deliverable. It is kept **outside the consuming repo**, so the pipeline leaves no footprint in the host project — no working folders, no gitignore entries. Proposals live in the coding agent's own scratchpad/staging area when the harness provides one, falling back to `/tmp/winnow/<repo-folder-name>-<hash>/proposals/` otherwise (the hash is derived from the repo's absolute path so every skill in the pipeline finds the same directory). They are **short-lived**: a proposal exists for the duration of a processing run — minutes, maybe hours — and the skills delete it once everything in it has been applied or created. It holds only what the user approved in conversation; anything not approved never makes it into the file. The durable records are the AI context and the tracker, not the proposal.
+The handoff between skills is an internal, short-lived file the user never needs to read — winnow's plumbing, not a deliverable. It is kept **outside the consuming repo**, so the pipeline leaves no working state in the host project — no working folders, no gitignore entries (the only thing winnow can write into the repo is the opt-in [run log](#the-run-log-optional)). Proposals live in the coding agent's own scratchpad/staging area when the harness provides one, falling back to `/tmp/winnow/<repo-folder-name>-<hash>/proposals/` otherwise (the hash is derived from the repo's absolute path so every skill in the pipeline finds the same directory). They are **short-lived**: a proposal exists for the duration of a processing run — minutes, maybe hours — and the skills delete it once everything in it has been applied or created. It holds only what the user approved in conversation; anything not approved never makes it into the file. The durable records are the AI context and the tracker, not the proposal.
+
+## The run log (optional)
+
+Decisions made in a run, including the decision not to act on something, otherwise vanish with the conversation. A project that wants that trail can opt in; **by default winnow writes nothing into your repo**.
+
+To opt in, say in the project's AI context that winnow runs should be logged, and optionally where. With no location given, logs go in `winnow-transcripts/` under the context folder. Once the findings are agreed and before anything is applied, winnow writes one log per run containing:
+
+- the source (a link when the transcript came from an external one), the date and the participants;
+- the tasks and context updates that were proposed, approved for execution, and discarded.
+
+It never contains the raw transcript. Because it is written before the context is updated and the tickets are created, it holds no ticket links and does not record an apply that failed. winnow does not maintain an index of the logs folder; that is up to the project.
 
 ## What a consuming repo must provide
 
