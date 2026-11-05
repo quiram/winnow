@@ -9,7 +9,7 @@ The index of winnow's context. Each entry below says what that document holds â€
 | [ai-context/task-tracking.md](ai-context/task-tracking.md) | Which tracker holds work on winnow, how to reach it, and any ticket conventions. |
 | [ai-context/ways-of-working.md](ai-context/ways-of-working.md) | Conventions for changing this repo: commits and releases. |
 | [README.md](README.md) | The user-facing surface: what winnow is, what a consuming repo must provide, how to install it. It documents the **public** skills only, and never names a private one. |
-| [CONTRIBUTING.md](CONTRIBUTING.md) | Everything needed to change winnow's code: repo layout, architectural decisions and their reasoning, the release process. The **private** skills are documented here and nowhere else. |
+| [CONTRIBUTING.md](CONTRIBUTING.md) | How winnow is built, not what each skill does: repo layout, the relationships between skills and the cross-cutting decisions behind that structure, and the release process. A single skill's behaviour and the reasoning for it belong in its `SKILL.md`, not here. The **private** skills are documented here and nowhere else. |
 | `skills/*/SKILL.md` | A single skill's own behaviour and rules, which live there and nowhere else. |
 | `apm.yml` | Package identity, version and the marketplace self-listing. Its package description documents how to *use* winnow, so like the README it names no private skill. |
 
