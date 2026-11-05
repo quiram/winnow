@@ -138,13 +138,11 @@ It deliberately holds no raw transcript or other source material (it points at s
 
 ## Committing context updates
 
-`update-context` ends by offering to commit, which is its Step 7. A context update that stays in the working tree is invisible to everyone else and to whatever work comes next, so leaving the commit to chance means approved knowledge quietly never lands. The skill therefore always makes the offer, but only as an offer: it never commits, pushes or opens a PR unprompted.
+`update-context` ends by offering to commit (its Step 7), and the offer defaults to a branch and a PR. The behaviour is in the skill; the reasoning is what to keep in mind when changing it:
 
-How it offers is the policy:
-
-- **The project's own rules win.** If the AI context says how commits, branches and PRs work, the skill follows that, even where it permits committing straight to the default branch.
-- **The fallback is a branch and a PR, never a direct push to the default branch.** Winnow is used by teams, and direct pushes to the default branch are not good practice for teams, so the skill does not nudge anyone towards them. It only suggests one when the project's context or the user does.
-- **The offer covers the whole run.** `update-context` is the last step of the pipeline, so it also sweeps in what winnow left in the working tree, such as the [run log](#the-run-log), which keeps the log and the context changes in a single commit. Unrelated changes already in the tree are flagged and left out.
+- **It always offers.** A context update left in the working tree is invisible to everyone else and to later work, so approved knowledge would quietly never land. It stays an offer because committing is the user's call.
+- **The default is a PR, not a push to the default branch.** Winnow is used by teams, and direct pushes to the default branch are not good practice for teams, so the skill doesn't nudge anyone towards one. A project's own policy overrides this, whatever it says.
+- **The offer covers the whole run.** `update-context` is the pipeline's last step, so sweeping in what winnow left behind, such as the [run log](#the-run-log), keeps it in the same commit as the context changes.
 
 ## Working with mill
 
