@@ -70,7 +70,7 @@ After editing a document, **re-read it in full**. Check that it flows, that head
 Edits that stay in the working tree are invisible to everyone else and to later work, so finish by offering to get them committed. Never commit, push or open a PR without the user's say-so; this step is an offer.
 
 1. **Look for the project's own policy.** Check the AI context for rules on commits, branches and pull requests (commit message style, branch naming, whether changes go through review, who may merge). If there are any, follow them, including when they say to commit straight to the default branch.
-2. **Without a policy, offer a branch and a PR.** Offer to create a branch, commit the changes there, push it and open a pull request, so the changes can be merged into the default branch through review. Do not suggest pushing directly to the default branch unless the project's context or the user does.
+2. **Without a policy, offer a branch and a PR.** Offer to create a branch, commit the changes there, push it and open a pull request, so the changes can be merged into the default branch through review. Do not suggest pushing directly to the default branch unless the project's context or the user does: teams are not well served by direct pushes to it.
 3. **Cover everything the run left behind.** The offer is for the whole working tree change, not only your edits: anything else winnow left there, such as a run log, goes in the same commit. If the working tree also holds changes unrelated to this run, say so and leave them out unless the user says otherwise.
 
 If the user declines, leave the working tree as it is and say so.
