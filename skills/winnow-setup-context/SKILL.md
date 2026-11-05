@@ -49,13 +49,14 @@ Fill it from what the user actually confirms. Where they don't know yet, leave t
 
 ## Step 4 — Establish the doc map
 
-**Do not guess placement item-by-item, and do not ask the user to invent a structure from a blank page** — that is exactly how context rots into an incoherent pile of sentences, or never gets structured at all. Bring a concrete default for the user to approve, amend, or reject:
+**The project's own guidance comes first.** If the project says anything about how its documentation or context should be structured, in its context, its contributing notes or its conventions, follow it and propose nothing different. Winnow never contradicts or deviates from a project's own instructions; the default below is for projects that give none.
+
+**Do not guess placement item-by-item, and do not ask the user to invent a structure from a blank page** — that is exactly how context rots into an incoherent pile of sentences, or never gets structured at all. Where the project gives no guidance, bring a concrete default for the user to approve, amend, or reject. It is an **index-based structure**, built on progressive disclosure:
 
 - Documentation serves **both humans and AI agents**. That dual audience is the reason for the structure, not an afterthought.
-- `README.md` at the repo root is the starting point: it says what the project is and how to get started, then points into `docs/`. It does not accumulate content that belongs in `docs/`.
-- Each **domain** of knowledge gets its own subfolder under `docs/` (e.g. product/vision, technology, design) — adapt the folder names to the project's actual domains rather than proposing empty folders that match this example.
-- Every level carries its **own index** — a README naming what each file and subfolder below it contains, so a reader or agent can find the right document without opening several wrong ones first.
-- Indexes exist so agents can load context **selectively** rather than reading everything and filling the context window.
+- A **base index file** at the repo root is the starting point: `AGENTS.md`, or `README.md` where the project keeps a single file. It says what each document or folder below it holds, and points onward. It does not accumulate content that belongs elsewhere.
+- Each **domain** of knowledge gets its own folder (e.g. product/vision, technology, design), adapted to the project's actual domains rather than proposing empty folders that match this example. Each folder carries **its own index** in turn, so the structure nests as deep as the project needs and no deeper.
+- Indexes exist so a reader or agent can find the right document without opening several wrong ones, and can load context **selectively** rather than reading everything and filling the context window.
 
 Present this as a starting point tuned to the project at hand, not a rigid template.
 
@@ -64,6 +65,8 @@ Present this as a starting point tuned to the project at hand, not a rigid templ
 Once the user has approved, write the doc map into the AI context itself — it is knowledge about the project, so it belongs where the project's knowledge lives. Write it the way update-context writes: integrate it into the document's existing structure rather than appending a block, match the document's voice, and describe present state only.
 
 Create the folders and indexes the map describes only where they have content to hold. An empty tree of READMEs promising documents that don't exist is noise that every later reader has to work around.
+
+Setup is where winnow's part in the indexes ends. It does not keep them up to date afterwards; that is the project's prerogative, as the rest of the project's structure is.
 
 ## Step 6 — Report
 
