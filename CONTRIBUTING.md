@@ -136,6 +136,16 @@ Two decisions are worth knowing before changing it:
 
 It deliberately holds no raw transcript or other source material (it points at sources instead), and winnow keeps no index of the logs folder; that is the project's call.
 
+## Committing context updates
+
+`update-context` ends by offering to commit, which is its Step 7. A context update that stays in the working tree is invisible to everyone else and to whatever work comes next, so leaving the commit to chance means approved knowledge quietly never lands. The skill therefore always makes the offer, but only as an offer: it never commits, pushes or opens a PR unprompted.
+
+How it offers is the policy:
+
+- **The project's own rules win.** If the AI context says how commits, branches and PRs work, the skill follows that, even where it permits committing straight to the default branch.
+- **The fallback is a branch and a PR, never a direct push to the default branch.** Winnow is used by teams, and direct pushes to the default branch are not good practice for teams, so the skill does not nudge anyone towards them. It only suggests one when the project's context or the user does.
+- **The offer covers the whole run.** `update-context` is the last step of the pipeline, so it also sweeps in what winnow left in the working tree, such as the [run log](#the-run-log), which keeps the log and the context changes in a single commit. Unrelated changes already in the tree are flagged and left out.
+
 ## Working with mill
 
 [mill](https://github.com/quiram/mill) is a development dependency of this repo, not of the package: it sits under `devDependencies` in `apm.yml`, so people who install winnow never receive it. It exists so that contributors can use mill's `start-task` skill when beginning work here.
