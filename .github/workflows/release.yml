@@ -1,0 +1,151 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Version to release, as X.Y.Z. Leave empty to release the version recommended from the changes since the last release.
+        required: false
+        type: string
+      dry_run:
+        description: Run every step except committing, tagging and pushing.
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Check out main
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Find the last release
+        id: last
+        run: |
+          tag="$(git tag --list 'v[0-9]*.[0-9]*.[0-9]*' --sort=-v:refname | head -n 1)"
+          if [ -z "$tag" ]; then
+            echo "::error::No release tag found to compare against."
+            exit 1
+          fi
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+
+      - name: Recommend a version
+        if: inputs.version == ''
+        uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          claude_args: |
+            --allowedTools "Read,Write,Bash(git log:*),Bash(git diff:*),Bash(git show:*)"
+          prompt: |
+            Recommend the next version of winnow, which follows semantic versioning.
+            The last release is ${{ steps.last.outputs.tag }}.
+
+            Survey what has landed since then (`git log ${{ steps.last.outputs.tag }}..HEAD`).
+            Read the diff wherever a commit subject does not settle what changed.
+            Sort each change by what it does to a consumer. A consumer installs the
+            package and invokes its skills, so their contract is the skill names, the
+            arguments the skills take, and what each skill promises to do:
+
+            - breaking: a skill renamed or removed, an argument dropped or redefined,
+              a promise withdrawn. Anything that makes an invocation that worked before
+              stop working, or quietly work differently.
+            - feature: a new skill, a new argument, behaviour nothing relied on before.
+            - fix: corrections, wording, docs, and restructuring a consumer cannot observe.
+
+            The highest category present sets the bump: breaking raises the major
+            version, feature the minor, fix the patch. This applies before 1.0 as well.
+
+            Write the result to ${{ runner.temp }}/recommendation.json as
+            {"version": "X.Y.Z", "reasoning": "<markdown>"}. The reasoning names the
+            category that drove the version and lists the specific changes in it.
+            Write nothing else and change nothing in the repository.
+
+      - name: Settle the version
+        id: version
+        env:
+          INPUT_VERSION: ${{ inputs.version }}
+          LAST_TAG: ${{ steps.last.outputs.tag }}
+          RECOMMENDATION: ${{ runner.temp }}/recommendation.json
+        run: |
+          if [ -n "$INPUT_VERSION" ]; then
+            version="$INPUT_VERSION"
+            echo "Releasing the requested version, $version." >> "$GITHUB_STEP_SUMMARY"
+          else
+            if [ ! -f "$RECOMMENDATION" ]; then
+              echo "::error::No version was given and none was recommended."
+              exit 1
+            fi
+            version="$(jq -r '.version' "$RECOMMENDATION")"
+            {
+              echo "### Recommended version: $version"
+              echo
+              jq -r '.reasoning' "$RECOMMENDATION"
+            } >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+          if ! printf '%s' "$version" | grep -Eq '^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$'; then
+            echo "::error::'$version' is not a version in the form X.Y.Z."
+            exit 1
+          fi
+          last="${LAST_TAG#v}"
+          latest="$(printf '%s\n%s\n' "$last" "$version" | sort -V | tail -n 1)"
+          if [ "$version" = "$last" ] || [ "$latest" != "$version" ]; then
+            echo "::error::$version is not later than the last release, $last."
+            exit 1
+          fi
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+      - name: Install APM CLI
+        uses: microsoft/apm-action@v1
+        with:
+          setup-only: 'true'
+          apm-version: '0.35.0'
+
+      - name: Bump the version
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          sed -i -E "s/^version: .*/version: $VERSION/" apm.yml
+          sed -i -E "s/^( {6}version: ).*/\1$VERSION/" apm.yml
+          if [ "$(grep -cE "^( {6})?version: $VERSION\$" apm.yml)" != 2 ]; then
+            echo "::error::apm.yml does not hold $VERSION in both places."
+            exit 1
+          fi
+
+      - name: Validate and regenerate the marketplace
+        run: |
+          apm marketplace check
+          apm pack
+          unexpected="$(git status --porcelain | grep -vE ' (apm\.yml|\.claude-plugin/marketplace\.json)$' || true)"
+          if [ -n "$unexpected" ]; then
+            echo "::error::apm pack changed more than apm.yml and marketplace.json:"
+            echo "$unexpected"
+            exit 1
+          fi
+
+      - name: Commit, tag and push
+        if: ${{ !inputs.dry_run }}
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add apm.yml .claude-plugin/marketplace.json
+          git commit -m "Release v$VERSION"
+          git tag -a "v$VERSION" -m "v$VERSION"
+          git push --atomic origin HEAD:main "v$VERSION"
+
+      - name: Verify
+        run: apm marketplace check
