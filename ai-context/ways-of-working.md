@@ -6,4 +6,4 @@ Small and single-purpose — one concern each, never a single sweep at the end o
 
 ## Releases
 
-Releases go through the repo-local `release` skill at `.claude/skills/release/SKILL.md`, which is not part of the winnow package and doubles as manual step-by-step instructions. Versions follow semver and are never picked on the user's behalf.
+Releases go through the manually triggered Release workflow; [CONTRIBUTING.md](../CONTRIBUTING.md) says how it works. Versions follow semver.
